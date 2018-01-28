@@ -16,7 +16,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    self.mapView.myLocationEnabled = YES;
+    
+    self.mapView.mapType = kGMSTypeNormal;
+    
+    self.mapView.settings.compassButton = YES;
+    
+    self.mapView.settings.myLocationButton = YES;
+    
+    self.mapView.delegate = self;
+    
 }
 
 
