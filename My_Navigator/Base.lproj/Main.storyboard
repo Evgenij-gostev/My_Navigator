@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BZI-pC-Ije">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--My_Navigator-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
@@ -19,21 +20,215 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9L8-Ru-PaA" customClass="GMSMapView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="570"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V5Z-7Z-Rvb">
+                                <rect key="frame" x="293" y="593" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="getCurrentPlace:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jUa-Os-cvb"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VPH-dL-scP">
+                                <rect key="frame" x="16" y="564" width="200" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pci-u7-Mr6">
+                                <rect key="frame" x="16" y="593" width="200" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DXB-QH-bko">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Add" id="QKU-N5-PkL">
+                                        <connections>
+                                            <action selector="actionAdd:" destination="BYZ-38-t0r" id="nog-qg-Uqk"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="lEe-Lo-B4C"/>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="0cl-mH-Qxg"/>
+                                    <barButtonItem systemItem="search" id="zSW-ar-3tN">
+                                        <connections>
+                                            <action selector="actionOnLaunchClicked:" destination="BYZ-38-t0r" id="h4J-P0-onF"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="naD-st-12t"/>
+                                    <barButtonItem title="01" id="3wB-ph-1mv">
+                                        <connections>
+                                            <action selector="actionPolilyne:" destination="BYZ-38-t0r" id="jo7-zu-xai"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRP-9w-eYE">
+                                <rect key="frame" x="64" y="592" width="200" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECf-vn-QPA">
+                                <rect key="frame" x="299" y="442" width="60" height="60"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <state key="normal" image="plus.jpg"/>
+                                <connections>
+                                    <action selector="actionScale:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DP3-S5-WWJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cP2-Kz-xLD">
+                                <rect key="frame" x="299" y="374" width="60" height="60"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Button" image="minus.jpg"/>
+                                <connections>
+                                    <action selector="actionScale:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Xzy-0g-cV7"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="My_Navigator" id="WdG-vJ-j4B">
+                        <rightBarButtonItems>
+                            <barButtonItem title="-" id="Aie-Bn-xcp">
+                                <color key="tintColor" red="1" green="0.17810008278294809" blue="0.14245770642736422" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="actionScaling:" destination="BYZ-38-t0r" id="KPc-Bh-yYM"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem tag="1" title="+" style="done" id="6F6-po-Mf1">
+                                <inset key="imageInsets" minX="-10" minY="-8" maxX="-10" maxY="-8"/>
+                                <inset key="landscapeImageInsets" minX="-5" minY="-14" maxX="-10" maxY="-13"/>
+                                <inset key="largeContentSizeImageInsets" minX="-4" minY="-7" maxX="-4" maxY="-5"/>
+                                <color key="tintColor" red="1" green="0.15760561606161283" blue="0.10542817557159745" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="actionScaling:" destination="BYZ-38-t0r" id="uiQ-zt-d7G"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
                     <connections>
+                        <outlet property="addressLabel" destination="VRP-9w-eYE" id="tXh-a6-xOJ"/>
+                        <outlet property="attributionsLabel" destination="pci-u7-Mr6" id="Ugt-27-bHA"/>
                         <outlet property="mapView" destination="9L8-Ru-PaA" id="Fv3-5S-JwR"/>
+                        <outlet property="nameLabel" destination="VPH-dL-scP" id="ZFv-Wr-VTD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="117.59999999999999" y="118.29085457271366"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="jFe-ed-UKi">
+            <objects>
+                <navigationController id="LGP-nD-rCY" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="CUp-zd-4O1">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="3vx-Bh-sH4"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wue-OR-eVl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-919" y="118"/>
+        </scene>
+        <!--My_Navigator-->
+        <scene sceneID="Enx-0U-GI3">
+            <objects>
+                <viewController storyboardIdentifier="EGMapViewController" id="4xH-u7-IGH" customClass="EGMapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="TGt-Sh-sc2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AYx-Y3-gNK" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="64" width="375" height="583"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="irc-KS-oad">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Add" id="Pdm-Tf-zxw">
+                                        <connections>
+                                            <action selector="actionAddRoute:" destination="4xH-u7-IGH" id="PIJ-U1-hT9"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Gi9-Mg-Jy9"/>
+                                    <barButtonItem title="Remove" id="4jt-KF-lDZ">
+                                        <connections>
+                                            <action selector="actionCleanerMapView:" destination="4xH-u7-IGH" id="6U1-RL-37r"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="vHb-SS-LVb"/>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="JUE-7Z-Fq5"/>
+                                </items>
+                            </toolbar>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="min-T5-LYs">
+                                <rect key="frame" x="307" y="374" width="60" height="60"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Button" image="minus.jpg"/>
+                                <connections>
+                                    <action selector="actionScaling:" destination="4xH-u7-IGH" eventType="touchUpInside" id="hlJ-bE-1jv"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vnM-8d-QAB">
+                                <rect key="frame" x="307" y="442" width="60" height="60"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <state key="normal" image="plus.jpg"/>
+                                <connections>
+                                    <action selector="actionScaling:" destination="4xH-u7-IGH" eventType="touchUpInside" id="pmS-ul-5dV"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <viewLayoutGuide key="safeArea" id="UFa-zO-Ixr"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="My_Navigator" id="ZLf-bv-g8O">
+                        <barButtonItem key="leftBarButtonItem" systemItem="search" id="tVZ-Xi-qnp">
+                            <connections>
+                                <action selector="actionSearchLocation:" destination="4xH-u7-IGH" id="5A6-UQ-ghS"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="AYx-Y3-gNK" id="AD9-PA-UV4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="htM-oB-zCN" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="117.59999999999999" y="842.42878560719646"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="4pd-nq-iPt">
+            <objects>
+                <navigationController id="BZI-pC-Ije" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="RHE-S1-idY">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="4xH-u7-IGH" kind="relationship" relationship="rootViewController" id="KRk-Sq-loH"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1le-CD-rWp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-919" y="843"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="minus.jpg" width="114" height="114"/>
+        <image name="plus.jpg" width="114" height="114"/>
+    </resources>
 </document>
