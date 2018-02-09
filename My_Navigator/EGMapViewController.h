@@ -15,8 +15,8 @@
 @property (strong, nonatomic) CLLocationManager* locationManager;
 
 - (IBAction)actionScaling:(UIButton *)sender;
-- (IBAction)actionAddRoute:(UIBarButtonItem *)sender;
-- (IBAction)actionSearchLocation:(UIBarButtonItem *)sender;
+- (IBAction)actionAddRoute:(UIButton *)sender;
+- (IBAction)actionSearchLocation:(UIButton *)sender;
 - (IBAction)actionCleanerMapView:(UIBarButtonItem *)sender;
 
 

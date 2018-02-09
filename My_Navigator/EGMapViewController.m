@@ -13,7 +13,7 @@
 @import GooglePlaces;
 @import GooglePlacePicker;
 
-@interface EGMapViewController () <CLLocationManagerDelegate, GMSPlacePickerViewControllerDelegate, GMSAutocompleteViewControllerDelegate, GMSAutocompleteResultsViewControllerDelegate>
+@interface EGMapViewController () <CLLocationManagerDelegate, GMSAutocompleteResultsViewControllerDelegate>
 
 @property (strong, nonatomic) GMSCameraPosition* position;
 
@@ -27,6 +27,9 @@
 @property (strong, nonatomic) UISearchController* searchController;
 @property (strong, nonatomic) UIView *searchView;
 @property (strong, nonatomic) GMSPolyline *polyline;
+@property (strong, nonatomic) NSString* distance;
+@property (strong, nonatomic) NSString* duration;
+@property (strong, nonatomic) NSString* nameLocation;
 
 @end
 
@@ -47,33 +50,24 @@
     self.mapView.settings.myLocationButton = YES;
     self.mapView.delegate = self;
     
-//    self.origin = CLLocationCoordinate2DMake(55.439505, 37.769421);
 
     self.mapView.camera = [GMSCameraPosition cameraWithTarget:self.mapView.myLocation.coordinate zoom:0.1];
-    
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         GMSCameraPosition* camera = [GMSCameraPosition cameraWithTarget:self.mapView.myLocation.coordinate zoom:12.0];
         self.mapView.camera = camera;
         self.originLocation = self.mapView.myLocation.coordinate;
     });
     
+
+////////////////////////////////////////
     
-//    self.placesClient = [GMSPlacesClient sharedClient];
     self.serverManager = [EGServerManager sharedManager];
     self.path = [GMSMutablePath path];
-    
-    
-////////////////////////////////////////
     
     self.resultsViewController = [[GMSAutocompleteResultsViewController alloc] init];
     self.resultsViewController.delegate = self;
     
-    
-    
-    
-    
-    
+       
 }
 
 
@@ -84,30 +78,64 @@
 }
 
 
+#pragma mark - Metods
+
 - (void) getRouteInformationFromServer {
-    GMSMutablePath* locationPath = [GMSMutablePath path];
     [self.serverManager getRouteWithOffset:[self.routeInformationArray count]
                 origin:self.originLocation
            destination:self.destinationLocation
              onSuccess:^(NSArray *routeInformationsArray) {
-                 for (EGRouteInformation* routeInformation in routeInformationsArray) {
-                     GMSPath *polyLinePath = [GMSPath pathFromEncodedPath:routeInformation.points];
-//                     NSLog(@"points: %@", routeInformation.points);
-                     for (int i = 0; i < polyLinePath.count; i++) {
-                         [locationPath addCoordinate:[polyLinePath coordinateAtIndex:i]];
+                 if (!routeInformationsArray) {
+                     [self showSimpleAlertWithMessage:@"Маршрут невозможно построить:("];
+                 } else {
+                     for (EGRouteInformation* routeInformation in routeInformationsArray) {
+//                         NSLog(@"Растояние: %@", routeInformation.distanceText);
+//                         NSLog(@"Время: %@", routeInformation.durationText);
+                         self.distance = routeInformation.distanceText;
+                         self.duration = routeInformation.durationText;
+                         self.path = routeInformation.path;
                      }
                  }
              }
              onFailure:^(NSError *error, NSInteger statusCode) {
                  NSLog(@"error = %@, code = %ld", [error localizedDescription], statusCode);
              }];
-    self.path = locationPath;
+}
+
+
+- (void) showSimpleAlertWithMessage:(NSString*) message {
+    if (!message) {
+        message = [NSString stringWithFormat:@"Расстояние: %@ \n Время: %@", self.distance, self.duration];
+    }
+//    NSString* message = [NSString stringWithFormat:@"Расстояние: %@ \n Время: %@", self.distance, self.duration];
+    UIAlertController * alert=[UIAlertController alertControllerWithTitle:self.nameLocation
+                                                                  message:message
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* yesButton = [UIAlertAction
+                                actionWithTitle:@"ОК"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action) {
+                                    
+                                }];
+    UIAlertAction* noButton = [UIAlertAction
+                               actionWithTitle:@"Отмена"
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * action) {
+                                   [self.mapView clear];
+                               }];
+
+    [alert addAction:yesButton];
+    [alert addAction:noButton];
+    
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 
 
 #pragma mark - Actions
-
+// Масштабирование
 - (IBAction)actionScaling:(UIButton *)sender {
     CGFloat zoom = self.position.zoom;
     if (sender.tag == 1) {
@@ -118,27 +146,32 @@
     [self.mapView animateToZoom:zoom];
 }
 
-
-- (IBAction)actionAddRoute:(UIBarButtonItem *)sender {
+// Построить маршрут
+- (IBAction)actionAddRoute:(UIButton *)sender {
     [self getRouteInformationFromServer];
-//    self.polyline = nil;
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        GMSCameraPosition *camera = [GMSCameraPosition cameraWithTarget:self.originLocation zoom:12.0];
 //        NSLog(@"path: %@", self.path);
         self.polyline = [GMSPolyline polylineWithPath:self.path];
         self.polyline.strokeColor = [UIColor greenColor];
         self.polyline.strokeWidth = 5.f;
         self.polyline.map = self.mapView;
+        
+// Показать все маркеры на экране
+        GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithCoordinate:self.originLocation
+                                                                           coordinate:self.destinationLocation];
+        UIEdgeInsets mapInsets = UIEdgeInsetsMake(100.0, 100.0, 100.0, 100.0);
+        GMSCameraPosition *camera = [self.mapView cameraForBounds:bounds insets:mapInsets];
         self.mapView.camera = camera;
         
         NSLog(@"маршрут построен");
+        [self showSimpleAlertWithMessage:nil];
     });
 }
 
 
-
-- (IBAction)actionSearchLocation:(UIBarButtonItem *)sender {
+// Поиск места (предлагает варианты)
+- (IBAction)actionSearchLocation:(UIButton*)sender {
     [self.mapView clear];
    
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.resultsViewController];
@@ -159,15 +192,6 @@
 
 
 
-- (IBAction)actionCleanerMapView:(UIBarButtonItem *)sender {
-     [self.mapView clear];
-//    self.polyline = nil;
-//    self.path = nil;
-}
-
-
-
-
 #pragma mark - GoogleMap
 
 - (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position {
@@ -175,43 +199,38 @@
 }
 
 
-
+// Ставим маркер сами
 - (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
-//    NSLog(@"didTapAtCoordinate - %d %d", (int)coordinate.latitude, (int)coordinate.longitude);
-    
     [self.searchView removeFromSuperview];
+
+    [self.mapView clear];
     
     GMSMarker *marker = [GMSMarker markerWithPosition:coordinate];
-//    marker.title = place.name;
-//    marker.snippet = [[place.formattedAddress componentsSeparatedByString:@", "]
-//                      componentsJoinedByString:@"\n"];
+
     marker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
     marker.appearAnimation = kGMSMarkerAnimationPop;
     marker.map = self.mapView;
-    
+
+    self.nameLocation = nil;
     self.destinationLocation = coordinate;
-    
 }
 
 
-- (void)viewController:(GMSAutocompleteViewController *)viewController
-didAutocompleteWithPlace:(GMSPlace *)place {
+
+- (void)viewController:(GMSAutocompleteViewController *)viewController didAutocompleteWithPlace:(GMSPlace *)place {
     [self dismissViewControllerAnimated:YES completion:nil];
-    
-    
 }
 
 
 #pragma mark - API Google Places
 
-- (void)resultsController:(GMSAutocompleteResultsViewController *)resultsController
- didAutocompleteWithPlace:(GMSPlace *)place {
+- (void)resultsController:(GMSAutocompleteResultsViewController *)resultsController didAutocompleteWithPlace:(GMSPlace *)place {
     [self dismissViewControllerAnimated:YES completion:nil];
-
     [self.searchView removeFromSuperview];
     
     GMSMarker *marker = [GMSMarker markerWithPosition:place.coordinate];
     marker.title = place.name;
+    self.nameLocation = place.name;
     marker.snippet = [[place.formattedAddress componentsSeparatedByString:@", "]
                       componentsJoinedByString:@"\n"];
     marker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
@@ -233,11 +252,13 @@ didFailAutocompleteWithError:(NSError *)error {
     NSLog(@"Error: %@", [error description]);
 }
 
+
 // Turn the network activity indicator on and off again.
 - (void)didRequestAutocompletePredictionsForResultsController:
 (GMSAutocompleteResultsViewController *)resultsController {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 }
+
 
 - (void)didUpdateAutocompletePredictionsForResultsController:
 (GMSAutocompleteResultsViewController *)resultsController {

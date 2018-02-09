@@ -60,29 +60,34 @@
      originCoordinate,                              @"origin",
      destinationCoordinate,                         @"destination",
      @"driving",                                    @"mode",
+     @"now",                                        @"departure_time",
+     @"pessimistic",                                @"traffic_model",
      @"AIzaSyDbPMpz5YN6DbntQcX6XN3mwSee-HeRHIQ",    @"key", nil];
     
-//    AIzaSyDbPMpz5YN6DbntQcX6XN3mwSee-HeRHIQ
     
     [self.requestOperationManager
      GET:@"json"
      parameters:params
      success:^(AFHTTPRequestOperation *operation, NSDictionary* responseObject) {
+         
          NSLog(@"JSON: %@", responseObject);
 
-         NSArray* dictsArray = [[[[responseObject objectForKey:@"routes"] objectAtIndex:0] objectForKey:@"legs"] objectAtIndex:0];
-
-         NSMutableArray* objectsArray = [NSMutableArray array];
-
-         for (NSDictionary* dict in dictsArray) {
-             EGRouteInformation* routeInformation = [[EGRouteInformation alloc] initWithServerResponse:dict];
-             [objectsArray addObject:routeInformation];
+         if (![[responseObject objectForKey:@"status"] isEqualToString:@"ZERO_RESULTS"]) {
+             NSArray* dictsArray = [[[responseObject objectForKey:@"routes"] objectAtIndex:0] objectForKey:@"legs"];
+             
+             NSMutableArray* objectsArray = [NSMutableArray array];
+             for (NSDictionary* dict in dictsArray) {
+                 EGRouteInformation* routeInformation = [[EGRouteInformation alloc] initWithServerResponse:dict];
+                 [objectsArray addObject:routeInformation];
+             }
+             
+             if (success) {
+                 success(objectsArray);
+             }
+         } else {
+             success(nil);
          }
          
-         if (success) {
-             success(objectsArray);
-         }
-
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
          NSLog(@"Error: %@", error);
 
@@ -90,9 +95,6 @@
              failure(error, operation.response.statusCode);
          }
      }];
-    
 }
-
-
 
 @end

@@ -31,11 +31,12 @@
 		8C3989C020210F5600EB4573 /* EGServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3989BF20210F5600EB4573 /* EGServerManager.m */; };
 		8C3989C7202118B800EB4573 /* EGRouteInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3989C6202118B800EB4573 /* EGRouteInformation.m */; };
 		8CF15726201DE5A5003B76B3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF15725201DE5A5003B76B3 /* AppDelegate.m */; };
-		8CF15729201DE5A5003B76B3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF15728201DE5A5003B76B3 /* ViewController.m */; };
 		8CF1572C201DE5A5003B76B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1572A201DE5A5003B76B3 /* Main.storyboard */; };
 		8CF1572E201DE5A5003B76B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1572D201DE5A5003B76B3 /* Assets.xcassets */; };
 		8CF15731201DE5A5003B76B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1572F201DE5A5003B76B3 /* LaunchScreen.storyboard */; };
 		8CF15734201DE5A5003B76B3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF15733201DE5A5003B76B3 /* main.m */; };
+		8CFE67C6202BAE0500920178 /*  nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 8CFE67C5202BAE0500920178 /*  nav.png */; };
+		8CFE67C8202BAFC200920178 /* search.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CFE67C7202BAFC200920178 /* search.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,13 +87,13 @@
 		8CF15721201DE5A5003B76B3 /* My_Navigator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = My_Navigator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CF15724201DE5A5003B76B3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8CF15725201DE5A5003B76B3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		8CF15727201DE5A5003B76B3 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		8CF15728201DE5A5003B76B3 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		8CF1572B201DE5A5003B76B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8CF1572D201DE5A5003B76B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8CF15730201DE5A5003B76B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8CF15732201DE5A5003B76B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8CF15733201DE5A5003B76B3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8CFE67C5202BAE0500920178 /*  nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = " nav.png"; sourceTree = "<group>"; };
+		8CFE67C7202BAFC200920178 /* search.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = search.jpg; sourceTree = "<group>"; };
 		C2BC2D5D382029D0D7A04A37 /* libPods-My_Navigator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-My_Navigator.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD7F465DCDA877AA916F7D7 /* Pods-My_Navigator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My_Navigator.debug.xcconfig"; path = "Pods/Target Support Files/Pods-My_Navigator/Pods-My_Navigator.debug.xcconfig"; sourceTree = "<group>"; };
 		E1C632F47816149505486DBE /* Pods-My_Navigator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My_Navigator.release.xcconfig"; path = "Pods/Target Support Files/Pods-My_Navigator/Pods-My_Navigator.release.xcconfig"; sourceTree = "<group>"; };
@@ -122,6 +123,8 @@
 			isa = PBXGroup;
 			children = (
 				8C1CD73E20251E3500701E9F /* minus.jpg */,
+				8CFE67C7202BAFC200920178 /* search.jpg */,
+				8CFE67C5202BAE0500920178 /*  nav.png */,
 				8C1CD73F20251E3500701E9F /* plus.jpg */,
 			);
 			path = Images;
@@ -130,8 +133,6 @@
 		8C1CD7422025252800701E9F /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				8CF15727201DE5A5003B76B3 /* ViewController.h */,
-				8CF15728201DE5A5003B76B3 /* ViewController.m */,
 				8C1CD7432025255100701E9F /* EGMapViewController.h */,
 				8C1CD7442025255100701E9F /* EGMapViewController.m */,
 			);
@@ -323,8 +324,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CFE67C6202BAE0500920178 /*  nav.png in Resources */,
 				8C1CD74020251E3500701E9F /* minus.jpg in Resources */,
 				8C1CD74120251E3500701E9F /* plus.jpg in Resources */,
+				8CFE67C8202BAFC200920178 /* search.jpg in Resources */,
 				8CF15731201DE5A5003B76B3 /* LaunchScreen.storyboard in Resources */,
 				8CF1572E201DE5A5003B76B3 /* Assets.xcassets in Resources */,
 				8CF1572C201DE5A5003B76B3 /* Main.storyboard in Resources */,
@@ -399,7 +402,6 @@
 				8C3989AD20210F1C00EB4573 /* AFHTTPRequestOperation.m in Sources */,
 				8C1CD7452025255100701E9F /* EGMapViewController.m in Sources */,
 				8C3989BA20210F1C00EB4573 /* UIImageView+AFNetworking.m in Sources */,
-				8CF15729201DE5A5003B76B3 /* ViewController.m in Sources */,
 				8C3989AE20210F1C00EB4573 /* AFHTTPRequestOperationManager.m in Sources */,
 				8C3989BB20210F1C00EB4573 /* UIProgressView+AFNetworking.m in Sources */,
 				8C3989C7202118B800EB4573 /* EGRouteInformation.m in Sources */,

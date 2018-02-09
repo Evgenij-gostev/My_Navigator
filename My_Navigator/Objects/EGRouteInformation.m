@@ -8,21 +8,38 @@
 
 #import "EGRouteInformation.h"
 
+
 @implementation EGRouteInformation
 
 - (id) initWithServerResponse:(NSDictionary*) responseObject {
     self = [super init];
     if (self) {
         
-//        self.travelTime = [responseObject objectForKey:@"travelTime"];
-//        self.distance = [responseObject objectForKey:@"distance"];
-//        self.points = [[responseObject objectForKey:@"points"] stringValue];
-
-//        NSArray* dictsArray = [[[[responseObject objectForKey:@"routes"] objectAtIndex:0] objectForKey:@"legs"] objectAtIndex:0];
+// Дистанция
+//        self.distance = [[[responseObject objectForKey:@"distance"] objectForKey:@"value"] integerValue];
+//        NSLog(@"distance: %ld м", self.distance);
+        self.distanceText = [[responseObject objectForKey:@"distance"] objectForKey:@"text"];
+//        NSLog(@"distance: %@", self.distanceText);
         
-        self.points = [[[responseObject objectForKey:@"steps"] objectForKey:@"polyline"] objectForKey:@"points"];
-        NSLog(@"points: %@", self.points);
         
+// Продолжительность
+//        self.duration = [[[responseObject objectForKey:@"duration"] objectForKey:@"value"] integerValue];
+//        NSLog(@"duration: %ld сек", self.duration);
+        self.durationText = [[responseObject objectForKey:@"duration"] objectForKey:@"text"];
+//        NSLog(@"duration: %@", self.durationText);
+        
+        
+// Путь (маршрут)
+        self.path = [GMSMutablePath path];
+        NSArray* dictsArray = [responseObject objectForKey:@"steps"];
+        for (NSDictionary* dict in dictsArray) {
+            NSString* points = [[dict objectForKey:@"polyline"] objectForKey:@"points"];
+            GMSPath *polyLinePath = [GMSPath pathFromEncodedPath:points];
+//            NSLog(@"points: %@", points);
+            for (int i = 0; i < polyLinePath.count; i++) {
+                [self.path addCoordinate:[polyLinePath coordinateAtIndex:i]];
+            }
+        }
     }
     return self;
 }
