@@ -7,20 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GoogleMaps/GoogleMaps.h>
 
+@class GMSMutablePath;
 
 
 @interface EGRouteInformation : NSObject
 
-//@property (assign, nonatomic) NSInteger duration;
 @property (strong, nonatomic) NSString* durationText;
-//@property (assign, nonatomic) NSInteger distance;
 @property (strong, nonatomic) NSString* distanceText;
 @property (strong, nonatomic) GMSMutablePath* path;
 
 
 - (id) initWithServerResponse:(NSDictionary*) responseObject;
-
 
 @end

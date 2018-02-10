@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GoogleMaps/GoogleMaps.h>
+
+@class CLLocationManager;
+@class GMSMapView;
+@protocol GMSMapViewDelegate;
 
 @interface EGMapViewController : UIViewController <GMSMapViewDelegate>
 
@@ -17,8 +20,5 @@
 - (IBAction)actionScaling:(UIButton *)sender;
 - (IBAction)actionAddRoute:(UIButton *)sender;
 - (IBAction)actionSearchLocation:(UIButton *)sender;
-- (IBAction)actionCleanerMapView:(UIBarButtonItem *)sender;
-
-
 
 @end

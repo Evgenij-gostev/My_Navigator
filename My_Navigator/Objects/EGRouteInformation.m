@@ -7,6 +7,7 @@
 //
 
 #import "EGRouteInformation.h"
+#import <GoogleMaps/GoogleMaps.h>
 
 
 @implementation EGRouteInformation
@@ -15,27 +16,15 @@
     self = [super init];
     if (self) {
         
-// Дистанция
-//        self.distance = [[[responseObject objectForKey:@"distance"] objectForKey:@"value"] integerValue];
-//        NSLog(@"distance: %ld м", self.distance);
-        self.distanceText = [[responseObject objectForKey:@"distance"] objectForKey:@"text"];
-//        NSLog(@"distance: %@", self.distanceText);
-        
-        
-// Продолжительность
-//        self.duration = [[[responseObject objectForKey:@"duration"] objectForKey:@"value"] integerValue];
-//        NSLog(@"duration: %ld сек", self.duration);
-        self.durationText = [[responseObject objectForKey:@"duration"] objectForKey:@"text"];
-//        NSLog(@"duration: %@", self.durationText);
-        
-        
-// Путь (маршрут)
+        self.distanceText = responseObject[@"distance"][@"text"];
+        self.durationText = responseObject[@"duration"][@"text"];
+
         self.path = [GMSMutablePath path];
-        NSArray* dictsArray = [responseObject objectForKey:@"steps"];
+        NSArray* dictsArray = responseObject[@"steps"];
         for (NSDictionary* dict in dictsArray) {
-            NSString* points = [[dict objectForKey:@"polyline"] objectForKey:@"points"];
+            NSString* points = dict[@"polyline"][@"points"];
             GMSPath *polyLinePath = [GMSPath pathFromEncodedPath:points];
-//            NSLog(@"points: %@", points);
+
             for (int i = 0; i < polyLinePath.count; i++) {
                 [self.path addCoordinate:[polyLinePath coordinateAtIndex:i]];
             }

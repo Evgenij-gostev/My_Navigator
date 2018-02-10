@@ -6,17 +6,16 @@
 //  Copyright © 2018 Евгений Гостев. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "EGServerManager.h"
 #import "AFNetworking.h"
-#import "AppDelegate.h"
-
 #import "EGRouteInformation.h"
 
 
 
 @interface EGServerManager ()
 
-@property (strong, nonatomic) AFHTTPRequestOperationManager* requestOperationManager;
+@property (strong, nonatomic) AFHTTPSessionManager* sessionManager;
 
 @end
 
@@ -33,18 +32,14 @@
     return manager;
 }
 
-
-
 - (id)init {
     self = [super init];
     if (self) {
         NSURL* url = [NSURL URLWithString:@"https://maps.googleapis.com/maps/api/directions/"];
-        self.requestOperationManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:url];
+        self.sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:url];
     }
     return self;
 }
-
-
 
 - (void) getRouteWithOffset:(NSInteger) offset
                        origin:(CLLocationCoordinate2D) origin
@@ -64,37 +59,39 @@
      @"pessimistic",                                @"traffic_model",
      @"AIzaSyDbPMpz5YN6DbntQcX6XN3mwSee-HeRHIQ",    @"key", nil];
     
+    [self.sessionManager
+                 GET:@"json"
+          parameters:params
+            progress:^(NSProgress * _Nonnull downloadProgress) {
+                NSLog(@"%@", downloadProgress);
+            }
+             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                 NSLog(@"JSON: %@", responseObject);
+                 
+                 if (![[responseObject objectForKey:@"status"] isEqualToString:@"ZERO_RESULTS"]) {
+                     NSArray* dictsArray = [responseObject[@"routes"] firstObject][@"legs"];
+                     
+                     NSMutableArray* objectsArray = [NSMutableArray array];
+                     for (NSDictionary* dict in dictsArray) {
+                         EGRouteInformation* routeInformation = [[EGRouteInformation alloc] initWithServerResponse:dict];
+                         [objectsArray addObject:routeInformation];
+                     }
+                     
+                     if (success) {
+                         success(objectsArray);
+                     }
+                 } else {
+                     success(nil);
+                 }
+             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                 NSLog(@"Error: %@", error);
+                 
+                 if (failure) {
+//                                      failure(error, task.response);
+//                                      failure(error, task.response.URL);
+                 }
+             }];
     
-    [self.requestOperationManager
-     GET:@"json"
-     parameters:params
-     success:^(AFHTTPRequestOperation *operation, NSDictionary* responseObject) {
-         
-         NSLog(@"JSON: %@", responseObject);
-
-         if (![[responseObject objectForKey:@"status"] isEqualToString:@"ZERO_RESULTS"]) {
-             NSArray* dictsArray = [[[responseObject objectForKey:@"routes"] objectAtIndex:0] objectForKey:@"legs"];
-             
-             NSMutableArray* objectsArray = [NSMutableArray array];
-             for (NSDictionary* dict in dictsArray) {
-                 EGRouteInformation* routeInformation = [[EGRouteInformation alloc] initWithServerResponse:dict];
-                 [objectsArray addObject:routeInformation];
-             }
-             
-             if (success) {
-                 success(objectsArray);
-             }
-         } else {
-             success(nil);
-         }
-         
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         NSLog(@"Error: %@", error);
-
-         if (failure) {
-             failure(error, operation.response.statusCode);
-         }
-     }];
 }
 
 @end
