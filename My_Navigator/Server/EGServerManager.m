@@ -66,7 +66,7 @@
                 NSLog(@"%@", downloadProgress);
             }
              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                 NSLog(@"JSON: %@", responseObject);
+//                 NSLog(@"JSON: %@", responseObject);
                  
                  if (![[responseObject objectForKey:@"status"] isEqualToString:@"ZERO_RESULTS"]) {
                      NSArray* dictsArray = [responseObject[@"routes"] firstObject][@"legs"];
