@@ -17,7 +17,6 @@
 @property (strong, nonatomic) NSString* distanceText;
 @property (strong, nonatomic) GMSMutablePath* path;
 
-
 - (id) initWithServerResponse:(NSDictionary*) responseObject;
 
 @end

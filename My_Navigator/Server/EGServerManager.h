@@ -18,6 +18,6 @@
                      origin:(CLLocationCoordinate2D) origin
                 destination:(CLLocationCoordinate2D) destination
                   onSuccess:(void(^)(NSArray* routeInformationsArray)) success
-                  onFailure:(void(^)(NSError* error, NSInteger statusCode)) failure;
+                  onFailure:(void(^)(NSError* error, NSInteger state)) failure;
 
 @end

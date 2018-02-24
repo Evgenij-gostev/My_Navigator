@@ -45,7 +45,7 @@
                        origin:(CLLocationCoordinate2D) origin
                        destination:(CLLocationCoordinate2D) destination
                     onSuccess:(void(^)(NSArray* routeInformationsArray)) success
-                    onFailure:(void(^)(NSError* error, NSInteger statusCode)) failure {
+                    onFailure:(void(^)(NSError* error, NSInteger state)) failure {
     
     NSString* originCoordinate = [NSString stringWithFormat:@"%f,%f", origin.latitude, origin.longitude];
     NSString* destinationCoordinate = [NSString stringWithFormat:@"%f,%f", destination.latitude, destination.longitude];
@@ -66,7 +66,6 @@
                 NSLog(@"%@", downloadProgress);
             }
              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//                 NSLog(@"JSON: %@", responseObject);
                  
                  if (![[responseObject objectForKey:@"status"] isEqualToString:@"ZERO_RESULTS"]) {
                      NSArray* dictsArray = [responseObject[@"routes"] firstObject][@"legs"];
@@ -85,10 +84,8 @@
                  }
              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                  NSLog(@"Error: %@", error);
-                 
                  if (failure) {
-//                                      failure(error, task.response);
-//                                      failure(error, task.response.URL);
+                     failure(error, task.state);
                  }
              }];
     

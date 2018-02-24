@@ -40,16 +40,8 @@
     
     [self.informationView setHidden:YES];
 
-    
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    [self.locationManager requestAlwaysAuthorization];
-    [self.locationManager startUpdatingLocation];
-    
-    self.mapView.myLocationEnabled = YES;
-    self.mapView.mapType = kGMSTypeNormal;
-    self.mapView.settings.compassButton = YES;
-    self.mapView.delegate = self;
+    [self loadLocationManager];
+    [self loadMapView];
 
     _serverManager = [EGServerManager sharedManager];
     _path = [GMSMutablePath path];
@@ -58,16 +50,29 @@
     _destinationMarker = [[GMSMarker alloc] init];
 }
 
-
 #pragma mark - Metods
 
-- (void) getRouteDataFromServerAndTheRoute {
+- (void)loadLocationManager {
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    [self.locationManager requestAlwaysAuthorization];
+    [self.locationManager startUpdatingLocation];
+}
+
+- (void)loadMapView {
+    self.mapView.myLocationEnabled = YES;
+    self.mapView.mapType = kGMSTypeNormal;
+    self.mapView.settings.compassButton = YES;
+    self.mapView.delegate = self;
+}
+
+- (void)getRouteDataFromServerAndTheRoute {
     [_serverManager getRouteWithOffset:[_routeInformationArray count]
                 origin:_originLocation
            destination:_destinationLocation
              onSuccess:^(NSArray *routeInformationsArray) {
                  if (!routeInformationsArray) {
-                     [self showSimpleAlertOfTheRouteCannotBeBuilt];
+                     [self showSimpleAlertWithMessege:@"Маршрут невозможно построить:(" isOneButton:NO];
                  } else {
                      for (EGRouteInformation* routeInformation in routeInformationsArray) {
                          _distance = routeInformation.distanceText;
@@ -79,52 +84,42 @@
                      polyline.strokeWidth = 5.f;
                      _polyline = polyline;
                      _polyline.map = self.mapView;
-                     
-                     self.nameRouteLabel.text = _nameLocation;
-                     self.distanceRouteLabel.text = [NSString stringWithFormat:@"Расстояние: %@", _distance];
-                     self.durationRouteLabel.text = [NSString stringWithFormat:@"Время: %@", _duration];
-                     [self.informationView setHidden:NO];
+                     [self loadInformationView];
                  }
              }
-             onFailure:^(NSError *error, NSInteger statusCode) {
-                 NSLog(@"error = %@, code = %ld", [error localizedDescription], statusCode);
+             onFailure:^(NSError *error, NSInteger state) {
+                 NSLog(@"error = %@, code = %ld", [error localizedDescription], state);
              }];
 }
 
-- (void) showSimpleAlertOfTheRouteCannotBeBuilt {
-    NSString* message = @"Маршрут невозможно построить:(";
+- (void)loadInformationView {
+    self.nameRouteLabel.text = _nameLocation;
+    self.distanceRouteLabel.text = [NSString stringWithFormat:@"Расстояние: %@", _distance];
+    self.durationRouteLabel.text = [NSString stringWithFormat:@"Время: %@", _duration];
+    [self.informationView setHidden:NO];
+}
 
+- (void)showSimpleAlertWithMessege:(NSString*) message isOneButton:(BOOL) isOneButton {
     UIAlertController * alert=[UIAlertController alertControllerWithTitle:nil
                                                                   message:message
                                                            preferredStyle:UIAlertControllerStyleAlert];
+    if (isOneButton) {
+        UIAlertAction* yesButton = [UIAlertAction
+                                    actionWithTitle:@"ОК"
+                                    style:UIAlertActionStyleDefault
+                                    handler:^(UIAlertAction * _Nonnull action) {
+                                        [self getRouteDataFromServerAndTheRoute];
+                                    }];
+        [alert addAction:yesButton];
+    }
     UIAlertAction* noButton = [UIAlertAction
                                actionWithTitle:@"Отмена"
                                style:UIAlertActionStyleDefault
                                handler:nil];
+
     [alert addAction:noButton];
     [self presentViewController:alert animated:YES completion:nil];
 }
-
-- (void) showSimpleAlertAddRoute {
-    NSString* message = @"Построить маршрут?";
-    UIAlertController * alert=[UIAlertController alertControllerWithTitle:nil
-                                                                  message:message
-                                                           preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction* yesButton = [UIAlertAction
-                                actionWithTitle:@"ОК"
-                                style:UIAlertActionStyleDefault
-                                handler:^(UIAlertAction * _Nonnull action) {
-                                    [self getRouteDataFromServerAndTheRoute];
-                                }];
-    UIAlertAction* noButton = [UIAlertAction
-                               actionWithTitle:@"Отмена"
-                               style:UIAlertActionStyleDefault
-                               handler:nil];
-    [alert addAction:yesButton];
-    [alert addAction:noButton];
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
 
 #pragma mark - Actions
 
@@ -148,8 +143,7 @@
     [self.informationView setHidden:YES];
 }
 
-
-#pragma mark - GoogleMap
+#pragma mark - GMSMapViewDelegate
 
 - (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position {
     _position = position;
@@ -158,7 +152,7 @@
 - (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
     [self.informationView setHidden:YES];
     [self.mapView clear];
-    _destinationMarker= [GMSMarker markerWithPosition:coordinate];
+    _destinationMarker = [GMSMarker markerWithPosition:coordinate];
     _destinationMarker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
     _destinationMarker.appearAnimation = kGMSMarkerAnimationPop;
     _destinationMarker.map = self.mapView;
@@ -213,10 +207,11 @@
     
     [self presentViewController:fetcherSampleVC animated:YES completion:nil];
     [fetcherSampleVC setDelegate:self];
-    UIPopoverPresentationController* popoverController = [fetcherSampleVC popoverPresentationController];
-    [popoverController setPermittedArrowDirections:UIPopoverArrowDirectionAny];
     
-    _popover = popoverController;
+//    UIPopoverPresentationController* popoverController = [fetcherSampleVC popoverPresentationController];
+//    [popoverController setPermittedArrowDirections:UIPopoverArrowDirectionAny];
+    
+//    _popover = popoverController;
     
     return NO;
 }
@@ -225,9 +220,8 @@
 #pragma mark - EGFetcherSampleViewControllerDelegate
 
 - (void)autocompleteWithPlace:(GMSPlace *)place
-                 nameLocation:(NSString *)name
   andIsSelectedOriginLocation:(BOOL)isSelectedOriginLocation {
-    if ([name isEqualToString:@"мое местоположение"]) {
+    if (place == nil) {
         CLLocationCoordinate2D coordinate = self.mapView.myLocation.coordinate;
         if (isSelectedOriginLocation) {
             _originLocation = coordinate;
@@ -251,35 +245,33 @@
         
     } else {
         [self addMarkerWithPlace:place
-                    nameLocation:name
      andIsSelectedOriginLocation:isSelectedOriginLocation];
     }
 }
 
 - (void) addMarkerWithPlace:(GMSPlace *)place
-               nameLocation:(NSString *)name
 andIsSelectedOriginLocation:(BOOL)isSelectedOriginLocation {
     GMSMarker *marker = [GMSMarker markerWithPosition:place.coordinate];
-    marker.title = name;
+    marker.title = place.name;
     marker.snippet = [[place.formattedAddress componentsSeparatedByString:@", "] componentsJoinedByString:@"\n"];
     marker.appearAnimation = kGMSMarkerAnimationPop;
     
     if (isSelectedOriginLocation) {
-        self.originLocationTextField.text = name;
+        self.originLocationTextField.text = place.name;
         _originLocation = place.coordinate;
         marker.icon = [GMSMarker markerImageWithColor:[UIColor blueColor]];
         _originMarker = marker;
         _originMarker.map = self.mapView;
     } else {
-        _nameLocation = name;
-        self.destinationLocationTextField.text = name;
+        _nameLocation = place.name;
+        self.destinationLocationTextField.text = place.name;
         _destinationLocation = place.coordinate;
         marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
         _destinationMarker = marker;
         _destinationMarker.map = self.mapView;
     }
-    
-    if (_originLocation.latitude && _destinationLocation.latitude) {
+
+    if (CLLocationCoordinate2DIsValid(_originLocation) && CLLocationCoordinate2DIsValid(_destinationLocation)) {
         GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithCoordinate:_originLocation
                                                                            coordinate:_destinationLocation];
         UIEdgeInsets mapInsets = UIEdgeInsetsMake(100.0, 100.0, 100.0, 100.0);
@@ -287,7 +279,7 @@ andIsSelectedOriginLocation:(BOOL)isSelectedOriginLocation {
         self.mapView.camera = camera;
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self showSimpleAlertAddRoute];
+            [self showSimpleAlertWithMessege:@"Построить маршрут?" isOneButton:YES];
         });
         
     } else {

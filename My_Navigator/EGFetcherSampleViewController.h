@@ -11,7 +11,7 @@
 
 @protocol EGFetcherSampleViewControllerDelegate <NSObject>
 
-- (void)autocompleteWithPlace:(GMSPlace *)place nameLocation:(NSString*) name andIsSelectedOriginLocation:(BOOL) isSelectedOriginLocation;
+- (void)autocompleteWithPlace:(GMSPlace *)place andIsSelectedOriginLocation:(BOOL)isSelectedOriginLocation;
 
 @end
 

@@ -17,7 +17,6 @@
     GMSAutocompleteFetcher* _fetcher;
     GMSPlacesClient* _placesClient;
     NSMutableArray* _arrayPlace;
-    NSMutableArray* _arrayResultsName;
 }
 
 - (void)viewDidLoad {
@@ -30,12 +29,10 @@
     _fetcher = [[GMSAutocompleteFetcher alloc] initWithBounds:nil
                                                        filter:filter];
     _fetcher.delegate = self;
-    
     _placesClient = [GMSPlacesClient sharedClient];
 }
 
 - (void)textFieldDidChange:(UITextField *)textField {
-    _arrayResultsName = [NSMutableArray array];
     _arrayPlace = [NSMutableArray array];
     [_fetcher sourceTextHasChanged:textField.text];
 }
@@ -45,8 +42,6 @@
 
 - (void)didAutocompleteWithPredictions:(NSArray *)predictions {
     for (GMSAutocompletePrediction *prediction in predictions) {
-        [_arrayResultsName addObject:[prediction.attributedPrimaryText string]];
-        
         [_placesClient lookUpPlaceID:prediction.placeID callback:^(GMSPlace *place, NSError *error) {
             if (error != nil) {
                 NSLog(@"Place Details error %@", [error localizedDescription]);
@@ -75,8 +70,8 @@
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    _arrayResultsName = [NSMutableArray array];
-    _arrayPlace = [NSMutableArray array];
+//    _arrayPlace = [NSMutableArray array];
+    _arrayPlace = nil;
     [_fetcher sourceTextHasChanged:searchText];
 }
 
@@ -95,7 +90,7 @@
     if (self.isMyLocationEnabled && section == 0) {
         return 1;
     } else {
-        return [_arrayResultsName count];
+        return [_arrayPlace count];
     }
 }
 
@@ -110,7 +105,9 @@
         cell.textLabel.text = @"мое местоположение";
         cell.imageView.image = [UIImage imageNamed:@"My Location.png"];
     } else {
-        cell.textLabel.text = _arrayResultsName[indexPath.row];
+        GMSPlace* place = _arrayPlace[indexPath.row];
+        NSLog(@"place: %@", place.name);
+        cell.textLabel.text = place.name;
         cell.imageView.image = [UIImage imageNamed:@"location.png"];
     }
     return cell;
@@ -121,17 +118,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSString* nameLocation = nil;
     GMSPlace* place = nil;
     if (self.isMyLocationEnabled && indexPath.section == 0) {
-        nameLocation = @"мое местоположение";
+        place = nil;
     } else {
-        nameLocation = _arrayResultsName[indexPath.row];
         place = _arrayPlace[indexPath.row];
     }
-
     [self.delegate autocompleteWithPlace:place
-                            nameLocation:nameLocation
              andIsSelectedOriginLocation:self.isSelectedOriginLocation];
     
     [self dismissViewControllerAnimated:YES completion:nil];
