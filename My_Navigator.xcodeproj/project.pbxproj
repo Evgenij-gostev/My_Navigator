@@ -17,6 +17,8 @@
 		8C2EAFB1202F784B003F0AC3 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2EAFAE202F784A003F0AC3 /* search.png */; };
 		8C2EAFB2202F784B003F0AC3 /* minus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2EAFAF202F784B003F0AC3 /* minus.png */; };
 		8C2EAFB3202F784B003F0AC3 /* plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2EAFB0202F784B003F0AC3 /* plus.png */; };
+		8C346F8F2041E6B50017EC68 /* EGDestinationTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C346F8E2041E6B50017EC68 /* EGDestinationTableView.m */; };
+		8C346F922041F4110017EC68 /* EGSamplesPlaces.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C346F912041F4110017EC68 /* EGSamplesPlaces.m */; };
 		8C3989C020210F5600EB4573 /* EGServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3989BF20210F5600EB4573 /* EGServerManager.m */; };
 		8C3989C7202118B800EB4573 /* EGRouteInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3989C6202118B800EB4573 /* EGRouteInformation.m */; };
 		8CF15726201DE5A5003B76B3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF15725201DE5A5003B76B3 /* AppDelegate.m */; };
@@ -40,6 +42,10 @@
 		8C2EAFAE202F784A003F0AC3 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
 		8C2EAFAF202F784B003F0AC3 /* minus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = minus.png; sourceTree = "<group>"; };
 		8C2EAFB0202F784B003F0AC3 /* plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plus.png; sourceTree = "<group>"; };
+		8C346F8D2041E6B50017EC68 /* EGDestinationTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGDestinationTableView.h; sourceTree = "<group>"; };
+		8C346F8E2041E6B50017EC68 /* EGDestinationTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGDestinationTableView.m; sourceTree = "<group>"; };
+		8C346F902041F4110017EC68 /* EGSamplesPlaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGSamplesPlaces.h; sourceTree = "<group>"; };
+		8C346F912041F4110017EC68 /* EGSamplesPlaces.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGSamplesPlaces.m; sourceTree = "<group>"; };
 		8C3989BE20210F5600EB4573 /* EGServerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGServerManager.h; sourceTree = "<group>"; };
 		8C3989BF20210F5600EB4573 /* EGServerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGServerManager.m; sourceTree = "<group>"; };
 		8C3989C5202118B800EB4573 /* EGRouteInformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGRouteInformation.h; sourceTree = "<group>"; };
@@ -102,6 +108,8 @@
 				8C1CD7442025255100701E9F /* EGMapViewController.m */,
 				8C02AC732034FC1F006B8680 /* EGFetcherSampleViewController.h */,
 				8C02AC742034FC1F006B8680 /* EGFetcherSampleViewController.m */,
+				8C346F8D2041E6B50017EC68 /* EGDestinationTableView.h */,
+				8C346F8E2041E6B50017EC68 /* EGDestinationTableView.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -156,6 +164,8 @@
 			children = (
 				8C3989BE20210F5600EB4573 /* EGServerManager.h */,
 				8C3989BF20210F5600EB4573 /* EGServerManager.m */,
+				8C346F902041F4110017EC68 /* EGSamplesPlaces.h */,
+				8C346F912041F4110017EC68 /* EGSamplesPlaces.m */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -311,10 +321,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C346F8F2041E6B50017EC68 /* EGDestinationTableView.m in Sources */,
 				8C02AC752034FC1F006B8680 /* EGFetcherSampleViewController.m in Sources */,
 				8C1CD7452025255100701E9F /* EGMapViewController.m in Sources */,
 				8C3989C7202118B800EB4573 /* EGRouteInformation.m in Sources */,
 				8C3989C020210F5600EB4573 /* EGServerManager.m in Sources */,
+				8C346F922041F4110017EC68 /* EGSamplesPlaces.m in Sources */,
 				8CF15734201DE5A5003B76B3 /* main.m in Sources */,
 				8CF15726201DE5A5003B76B3 /* AppDelegate.m in Sources */,
 			);

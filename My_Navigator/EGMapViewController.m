@@ -10,6 +10,7 @@
 #import "EGServerManager.h"
 #import "EGRouteInformation.h"
 #import "EGFetcherSampleViewController.h"
+#import "EGSamplesPlaces.h"
 
 @interface EGMapViewController () <CLLocationManagerDelegate, EGFetcherSampleViewControllerDelegate>
 
@@ -33,12 +34,17 @@
     UIPopoverPresentationController* _popover;
     
     BOOL _isMyLocationEnabled;
+    
+    
+    NSArray* _array;
+    EGSamplesPlaces* _samplesPlaces;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self.informationView setHidden:YES];
+    [self.destinationTableView setHidden:YES];
 
     [self loadLocationManager];
     [self loadMapView];
@@ -48,6 +54,13 @@
     
     _originMarker = [[GMSMarker alloc] init];
     _destinationMarker = [[GMSMarker alloc] init];
+    
+    _samplesPlaces = [EGSamplesPlaces sharedSamplesPlaces];
+    _array = [NSMutableArray array];
+//    _array = @[@"Москва", @"Подольск", @"Домодедово", @"Пенза", @"Видное", @"Молоково"];
+//    self.destinationTableView = [[EGDestinationTableView alloc] initWithFrame:CGRectMake(30, 30, 300, 300)];
+//    _destinationTableView = destinationTableView.destinationTableView;
+    
 }
 
 #pragma mark - Metods
@@ -188,34 +201,43 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    [self.informationView setHidden:YES];
-    _polyline.map = nil;
-    
-    EGFetcherSampleViewController* fetcherSampleVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EGFetcherSampleViewController"];
-    
-    fetcherSampleVC.preferredContentSize = CGSizeMake(400, 350);
-    fetcherSampleVC.modalPresentationStyle = UIModalPresentationFormSheet;
-    fetcherSampleVC.isMyLocationEnabled = _isMyLocationEnabled;
-    
-    if (textField.tag == 0) {
-        _originMarker.map = nil;
-        fetcherSampleVC.isSelectedOriginLocation = YES;
-    } else if (textField.tag == 1) {
-        _destinationMarker.map = nil;
-        fetcherSampleVC.isSelectedOriginLocation = NO;
-    }
-    
-    [self presentViewController:fetcherSampleVC animated:YES completion:nil];
-    [fetcherSampleVC setDelegate:self];
-    
+//    [self.informationView setHidden:YES];
+//    _polyline.map = nil;
+//
+//    EGFetcherSampleViewController* fetcherSampleVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EGFetcherSampleViewController"];
+//
+//    fetcherSampleVC.preferredContentSize = CGSizeMake(400, 350);
+//    fetcherSampleVC.modalPresentationStyle = UIModalPresentationFormSheet;
+//    fetcherSampleVC.isMyLocationEnabled = _isMyLocationEnabled;
+//
+//    if (textField.tag == 0) {
+//        _originMarker.map = nil;
+//        fetcherSampleVC.isSelectedOriginLocation = YES;
+//    } else if (textField.tag == 1) {
+//        _destinationMarker.map = nil;
+//        fetcherSampleVC.isSelectedOriginLocation = NO;
+//    }
+//
+//    [self presentViewController:fetcherSampleVC animated:YES completion:nil];
+//    [fetcherSampleVC setDelegate:self];
+//
 //    UIPopoverPresentationController* popoverController = [fetcherSampleVC popoverPresentationController];
 //    [popoverController setPermittedArrowDirections:UIPopoverArrowDirectionAny];
-    
+//
 //    _popover = popoverController;
     
-    return NO;
+    return YES;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSLog(@"textField: %@", string);
+    [self.destinationTableView setHidden:NO];
+    [_samplesPlaces setRequest:textField.text];
+    _array = [_samplesPlaces getSamplesPlaces];
+
+    [self.destinationTableView reloadData];
+    return YES;
+}
 
 #pragma mark - EGFetcherSampleViewControllerDelegate
 
@@ -286,6 +308,35 @@ andIsSelectedOriginLocation:(BOOL)isSelectedOriginLocation {
         GMSCameraPosition* camera = [GMSCameraPosition cameraWithTarget:place.coordinate zoom:15.0];
         self.mapView.camera = camera;
     }
+}
+
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [_array count];
+}
+
+- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString* indentifier = @"Cell";
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:indentifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifier];
+    }
+    GMSPlace* place = _array[indexPath.row];
+    NSLog(@"place - %@", place.name);
+    cell.textLabel.text = place.name;
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 30.f;
 }
 
 @end

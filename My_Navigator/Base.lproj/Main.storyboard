@@ -144,6 +144,16 @@
                                     <action selector="actionAddRoute:" destination="4xH-u7-IGH" eventType="touchUpInside" id="VQu-aq-p6r"/>
                                 </connections>
                             </button>
+                            <tableView clipsSubviews="YES" alpha="0.84999999999999998" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="EGDestinationTableView" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ERt-b8-Mjh" customClass="EGDestinationTableView">
+                                <rect key="frame" x="195" y="77" width="175" height="159"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xvx-E3-y4o">
+                                <rect key="frame" x="-1" y="92" width="181" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="UFa-zO-Ixr"/>
@@ -151,12 +161,14 @@
                     <navigationItem key="navigationItem" title="My_Navigator" id="ZLf-bv-g8O"/>
                     <connections>
                         <outlet property="destinationLocationTextField" destination="f4g-SZ-Lkg" id="o6c-0z-vdK"/>
+                        <outlet property="destinationTableView" destination="ERt-b8-Mjh" id="q9u-xk-Tk3"/>
                         <outlet property="distanceRouteLabel" destination="T6H-XV-jM2" id="OfI-yi-Htv"/>
                         <outlet property="durationRouteLabel" destination="Mzj-eR-bdJ" id="fCp-hX-oCC"/>
                         <outlet property="informationView" destination="2A3-OL-iwb" id="e7s-6u-HEh"/>
                         <outlet property="mapView" destination="AYx-Y3-gNK" id="AD9-PA-UV4"/>
                         <outlet property="nameRouteLabel" destination="uAn-CX-Hu0" id="bmh-se-7qI"/>
                         <outlet property="originLocationTextField" destination="K58-I9-lZB" id="Q2R-Sy-VXr"/>
+                        <outlet property="testView" destination="xvx-E3-y4o" id="EHu-72-hKh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="htM-oB-zCN" sceneMemberID="firstResponder"/>

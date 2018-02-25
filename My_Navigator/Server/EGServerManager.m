@@ -12,7 +12,6 @@
 #import "EGRouteInformation.h"
 
 
-
 @interface EGServerManager ()
 
 @property (strong, nonatomic) AFHTTPSessionManager* sessionManager;

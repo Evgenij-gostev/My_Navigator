@@ -47,7 +47,6 @@
                 NSLog(@"Place Details error %@", [error localizedDescription]);
                 return;
             }
-
             if (place != nil) {
                 [_arrayPlace addObject:place];
             } else {
@@ -70,8 +69,8 @@
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-//    _arrayPlace = [NSMutableArray array];
-    _arrayPlace = nil;
+    _arrayPlace = [NSMutableArray array];
+//    _arrayPlace = nil;
     [_fetcher sourceTextHasChanged:searchText];
 }
 
