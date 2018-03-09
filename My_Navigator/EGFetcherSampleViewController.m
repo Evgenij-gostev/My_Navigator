@@ -7,126 +7,111 @@
 //
 
 #import "EGFetcherSampleViewController.h"
+#import "EGSamplesPlaces.h"
+#import "EGMarkers.h"
 
 
-@interface EGFetcherSampleViewController () <GMSAutocompleteFetcherDelegate>
+@interface EGFetcherSampleViewController ()
+
+@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *searchTextFieldConstraintTop;
 
 @end
 
+
 @implementation EGFetcherSampleViewController {
-    GMSAutocompleteFetcher* _fetcher;
-    GMSPlacesClient* _placesClient;
-    NSMutableArray* _arrayPlace;
+    NSArray* _arrayPlace;
+    EGSamplesPlaces* _samplesPlaces;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    GMSAutocompleteFilter *filter = [[GMSAutocompleteFilter alloc] init];
-    filter.type = kGMSPlacesAutocompleteTypeFilterNoFilter;
-    
-    // Create the fetcher.
-    _fetcher = [[GMSAutocompleteFetcher alloc] initWithBounds:nil
-                                                       filter:filter];
-    _fetcher.delegate = self;
-    _placesClient = [GMSPlacesClient sharedClient];
-}
-
-- (void)textFieldDidChange:(UITextField *)textField {
-    _arrayPlace = [NSMutableArray array];
-    [_fetcher sourceTextHasChanged:textField.text];
-}
-
-
-#pragma mark - GMSAutocompleteFetcherDelegate
-
-- (void)didAutocompleteWithPredictions:(NSArray *)predictions {
-    for (GMSAutocompletePrediction *prediction in predictions) {
-        [_placesClient lookUpPlaceID:prediction.placeID callback:^(GMSPlace *place, NSError *error) {
-            if (error != nil) {
-                NSLog(@"Place Details error %@", [error localizedDescription]);
-                return;
-            }
-            if (place != nil) {
-                [_arrayPlace addObject:place];
-            } else {
-                NSLog(@"No place details for %@", prediction.placeID);
-            }
-        }];
-        [self.tableView reloadData];
+    _samplesPlaces = [EGSamplesPlaces sharedSamplesPlaces];
+    _arrayPlace = [NSArray array];
+    [_searchTextField becomeFirstResponder];
+    if (_locationType == EGOriginLocationType) {
+        _searchTextFieldConstraintTop.constant = 15;
+    } else if (_locationType == EGDestinationLocationType) {
+        _searchTextFieldConstraintTop.constant = 65;
     }
+    
 }
 
-- (void)didFailAutocompleteWithError:(NSError *)error {
-    NSLog(@"ERROR: %@", error.localizedDescription);
+#pragma mark - UItextFieldDelegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString* newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    [_samplesPlaces setRequest:newString];
+    _arrayPlace = [_samplesPlaces getSamplesPlaces];
+    //    _arrayPlace = @[@"Москва", @"Подольск", @"Домодедово", @"Пенза", @"Видное", @"Молоково"];
+    [_tableView reloadData];
+    return YES;
 }
-
-
-#pragma mark - UISearchBarDelegate
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    _arrayPlace = [NSMutableArray array];
-//    _arrayPlace = nil;
-    [_fetcher sourceTextHasChanged:searchText];
-}
-
 
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (self.isMyLocationEnabled) {
-        return 2;
-    } else {
-       return 1;
-    }
+    return _isMyLocationEnabled ? 2 : 1;
 }
 
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.isMyLocationEnabled && section == 0) {
-        return 1;
-    } else {
-        return [_arrayPlace count];
-    }
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return _isMyLocationEnabled && !section ? 1 : [_arrayPlace count];
 }
 
-- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString* indentifier = @"Cell";
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:indentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:indentifier];
     }
 
-    if (self.isMyLocationEnabled && indexPath.section == 0) {
-        cell.textLabel.text = @"мое местоположение";
+    if (self.myLocation.latitude != 0 && !indexPath.section) {
+        cell.textLabel.text = @"Мое местоположение";
         cell.imageView.image = [UIImage imageNamed:@"My Location.png"];
     } else {
         GMSPlace* place = _arrayPlace[indexPath.row];
-        NSLog(@"place: %@", place.name);
         cell.textLabel.text = place.name;
+        cell.detailTextLabel.text = place.formattedAddress;
+//        cell.textLabel.text = _arrayPlace[indexPath.row];
         cell.imageView.image = [UIImage imageNamed:@"location.png"];
     }
     return cell;
 }
 
-
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    GMSPlace* place = nil;
-    if (self.isMyLocationEnabled && indexPath.section == 0) {
+    GMSPlace* place;
+    if (self.myLocation.latitude != 0 && !indexPath.section) {
         place = nil;
     } else {
         place = _arrayPlace[indexPath.row];
     }
-    [self.delegate autocompleteWithPlace:place
-             andIsSelectedOriginLocation:self.isSelectedOriginLocation];
-    
+    [self createMarkerFromPlace:place];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 45.f;
+}
+
+#pragma mark - Touches
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Private Metods
+
+- (void)createMarkerFromPlace:(GMSPlace *)place {
+    EGMarkers* markers = [[EGMarkers alloc] initWithPlace:place
+                                            andMyLocation:self.myLocation];
+    GMSMarker* marker = [markers marker];
+    [self.delegate autocompleteWithMarker:marker
+                          andLocationType:_locationType];
 }
 
 @end

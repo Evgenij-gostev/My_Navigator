@@ -7,121 +7,187 @@
 //
 
 #import "EGMapViewController.h"
-#import "EGServerManager.h"
-#import "EGRouteInformation.h"
+#import <GoogleMaps/GoogleMaps.h>
 #import "EGFetcherSampleViewController.h"
-#import "EGSamplesPlaces.h"
+#import "EGRouteHistoryViewController.h"
 
-@interface EGMapViewController () <CLLocationManagerDelegate, EGFetcherSampleViewControllerDelegate>
+#import "EGMarkers.h"
+#import "EGRouteData.h"
+
+#import "Realm.h"
+#import "EGRouteHistory.h"
+
+@class CLLocationManager;
+@class GMSMapView;
+
+
+typedef enum {
+    EGOriginTextFieldType,
+    EGDestinationTextFieldType
+} EGTextFieldType;
+
+
+@interface EGMapViewController ()
+            <GMSMapViewDelegate,
+            CLLocationManagerDelegate,
+            EGFetcherSampleViewControllerDelegate,
+            EGRouteHistoryViewControllerDelegate,
+            EGRouteDataDelegate>
+
+@property (weak, nonatomic) IBOutlet UIView *informationView;
+@property (weak, nonatomic) IBOutlet GMSMapView *mapView;
+
+@property (weak, nonatomic) IBOutlet UITextField *originTextField;
+@property (weak, nonatomic) IBOutlet UITextField *destinationTextField;
+
+@property (weak, nonatomic) IBOutlet UILabel *distanceRouteLabel;
+@property (weak, nonatomic) IBOutlet UILabel *durationRouteLabel;
+@property (weak, nonatomic) IBOutlet UIButton *myLocationButton;
 
 @end
 
 
 @implementation EGMapViewController {
+    CLLocationManager* _locationManager;
+    GMSPlace* _place;
+    
     GMSCameraPosition* _position;
-    NSMutableArray* _routeInformationArray;
-    GMSMutablePath* _path;
+
     CLLocationCoordinate2D _originLocation;
     CLLocationCoordinate2D _destinationLocation;
     GMSMarker* _originMarker;
     GMSMarker* _destinationMarker;
     GMSPolyline* _polyline;
-    EGServerManager* _serverManager;
+
+    NSString* _addressLocation;
     NSString* _distance;
     NSString* _duration;
-    NSString* _nameLocation;
-    
-    UIPopoverPresentationController* _popover;
-    
+
+    BOOL _isFirstStartTheProgram;
     BOOL _isMyLocationEnabled;
-    
-    
-    NSArray* _array;
-    EGSamplesPlaces* _samplesPlaces;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self.informationView setHidden:YES];
-    [self.destinationTableView setHidden:YES];
+    [_myLocationButton setHidden:YES];
 
+    if (!_isMyLocationEnabled) {
+        CLLocationCoordinate2D startLocation = CLLocationCoordinate2DMake(0, 10);
+        [self scalingLocation:startLocation andZoom:1];
+    }
     [self loadLocationManager];
     [self loadMapView];
 
-    _serverManager = [EGServerManager sharedManager];
-    _path = [GMSMutablePath path];
-    
+    _isFirstStartTheProgram = YES;
     _originMarker = [[GMSMarker alloc] init];
     _destinationMarker = [[GMSMarker alloc] init];
-    
-    _samplesPlaces = [EGSamplesPlaces sharedSamplesPlaces];
-    _array = [NSMutableArray array];
-//    _array = @[@"Москва", @"Подольск", @"Домодедово", @"Пенза", @"Видное", @"Молоково"];
-//    self.destinationTableView = [[EGDestinationTableView alloc] initWithFrame:CGRectMake(30, 30, 300, 300)];
-//    _destinationTableView = destinationTableView.destinationTableView;
-    
 }
 
-#pragma mark - Metods
+#pragma mark - Private metods
 
 - (void)loadLocationManager {
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    [self.locationManager requestAlwaysAuthorization];
-    [self.locationManager startUpdatingLocation];
+    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager.delegate = self;
+    [_locationManager requestAlwaysAuthorization];
+    [_locationManager startUpdatingLocation];
 }
 
 - (void)loadMapView {
     self.mapView.myLocationEnabled = YES;
     self.mapView.mapType = kGMSTypeNormal;
-    self.mapView.settings.compassButton = YES;
     self.mapView.delegate = self;
 }
 
-- (void)getRouteDataFromServerAndTheRoute {
-    [_serverManager getRouteWithOffset:[_routeInformationArray count]
-                origin:_originLocation
-           destination:_destinationLocation
-             onSuccess:^(NSArray *routeInformationsArray) {
-                 if (!routeInformationsArray) {
-                     [self showSimpleAlertWithMessege:@"Маршрут невозможно построить:(" isOneButton:NO];
-                 } else {
-                     for (EGRouteInformation* routeInformation in routeInformationsArray) {
-                         _distance = routeInformation.distanceText;
-                         _duration = routeInformation.durationText;
-                         _path = routeInformation.path;
-                     }
-                     GMSPolyline *polyline = [GMSPolyline polylineWithPath:_path];
-                     polyline.strokeColor = [UIColor greenColor];
-                     polyline.strokeWidth = 5.f;
-                     _polyline = polyline;
-                     _polyline.map = self.mapView;
-                     [self loadInformationView];
-                 }
-             }
-             onFailure:^(NSError *error, NSInteger state) {
-                 NSLog(@"error = %@, code = %ld", [error localizedDescription], state);
-             }];
+- (void)scalingLocation:(CLLocationCoordinate2D)location andZoom:(CGFloat)zoom {
+    if (!zoom) {
+        zoom = 15.0;
+    }
+    GMSCameraPosition* camera = [GMSCameraPosition cameraWithTarget:location zoom:zoom];
+    self.mapView.camera = camera;
 }
 
-- (void)loadInformationView {
-    self.nameRouteLabel.text = _nameLocation;
+- (void)addMarker:(GMSMarker*)marker andLocationType:(EGLocationType)locationType {
+    if (locationType == EGOriginLocationType) {
+        _originMarker.map = nil;
+        _originTextField.text = marker.snippet;
+        _originLocation = marker.position;
+        _originMarker = marker;
+        _originMarker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
+        _originMarker.map = self.mapView;
+    } else if (locationType == EGDestinationLocationType) {
+        _destinationMarker.map = nil;
+        _destinationTextField.text = marker.snippet;
+        _addressLocation = marker.snippet;
+        _destinationLocation = marker.position;
+        _destinationMarker = marker;
+        _originMarker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
+        _destinationMarker.map = self.mapView;
+    }
+    [self scalingLocation:marker.position andZoom:0];
+    //    if (CLLocationCoordinate2DIsValid(_originLocation) && CLLocationCoordinate2DIsValid(_destinationLocation)) {
+    if (_originLocation.latitude != 0 && _destinationLocation.latitude != 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self showSimpleAlertWithMessege:@"Построить маршрут?" isOneButton:NO];
+        });
+    }
+}
+
+-(void)choiceOfLocation:(CLLocationCoordinate2D)coordinate {
+    EGMarkers* markers = [[EGMarkers alloc] initWithCoordinate:coordinate];
+    GMSMarker* marker = [markers marker];
+    NSString* message = @"Выбор старта или финиша";
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:nil
+                                                                    message:message
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* yesButton = [UIAlertAction
+                                actionWithTitle:@"Старт"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * _Nonnull action) {
+                                    [self addMarker:marker
+                                    andLocationType:EGOriginLocationType];
+                                }];
+    UIAlertAction* noButton = [UIAlertAction
+                               actionWithTitle:@"Финиш"
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * _Nonnull action) {
+                                   [self addMarker:marker
+                                   andLocationType:EGDestinationLocationType];
+                               }];
+    [alert addAction:yesButton];
+    [alert addAction:noButton];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)buildRoute {
+    EGRouteData* routeData = [[EGRouteData alloc] initWithOrigin:_originLocation
+                                                     destination:_destinationLocation];
+    [routeData setDelegate:self];
+}
+
+- (void)loadInformationViewAndScaling {
+    GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithCoordinate:_originLocation
+                                                                       coordinate:_destinationLocation];
+    UIEdgeInsets mapInsets = UIEdgeInsetsMake(140.0, 100.0, 100.0, 100.0);
+    GMSCameraPosition *camera = [self.mapView cameraForBounds:bounds insets:mapInsets];
+    self.mapView.camera = camera;
     self.distanceRouteLabel.text = [NSString stringWithFormat:@"Расстояние: %@", _distance];
     self.durationRouteLabel.text = [NSString stringWithFormat:@"Время: %@", _duration];
     [self.informationView setHidden:NO];
 }
 
 - (void)showSimpleAlertWithMessege:(NSString*) message isOneButton:(BOOL) isOneButton {
-    UIAlertController * alert=[UIAlertController alertControllerWithTitle:nil
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:nil
                                                                   message:message
-                                                           preferredStyle:UIAlertControllerStyleAlert];
-    if (isOneButton) {
+//                                 preferredStyle:UIAlertControllerStyleAlert];
+                                                           preferredStyle:UIAlertControllerStyleActionSheet];
+    if (!isOneButton) {
         UIAlertAction* yesButton = [UIAlertAction
                                     actionWithTitle:@"ОК"
                                     style:UIAlertActionStyleDefault
                                     handler:^(UIAlertAction * _Nonnull action) {
-                                        [self getRouteDataFromServerAndTheRoute];
+                                        [self buildRoute];
                                     }];
         [alert addAction:yesButton];
     }
@@ -132,6 +198,29 @@
 
     [alert addAction:noButton];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+
+
+- (void)saveRoute {
+    NSLog(@"save route");
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    EGRouteHistory* routeHistory = [[EGRouteHistory alloc] init];
+//    [routeHistory setOriginLocationCoordinate:_originLocation];
+//    [routeHistory setDestinationLocationCoordinate:_destinationLocation];
+
+    [routeHistory setOriginMarker:_originMarker];
+    [routeHistory setDestinationMarker:_destinationMarker];
+    
+    //    routeHistory.originMarker = _originMarker;
+    //    routeHistory.destinationMarker = _destinationMarker;
+    //    routeHistory.polyline = _polyline;
+    routeHistory.name = _addressLocation;
+    
+    [realm addObject:routeHistory];
+    [realm commitWriteTransaction];
 }
 
 #pragma mark - Actions
@@ -146,8 +235,12 @@
     [self.mapView animateToZoom:zoom];
 }
 
+- (IBAction)actionMyLocation:(id)sender {
+    [self scalingLocation:self.mapView.myLocation.coordinate andZoom:12];
+}
+
 - (IBAction)actionAddRoute:(UIButton *)sender {
-    [self getRouteDataFromServerAndTheRoute];
+    [self buildRoute];
     [self.view addSubview:self.informationView];
 }
 
@@ -156,28 +249,23 @@
     [self.informationView setHidden:YES];
 }
 
+- (IBAction)actionRouteHistory:(UIButton *)sender {
+    EGRouteHistoryViewController* routeHistoryVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EGRouteHistoryViewController"];
+    routeHistoryVC.modalPresentationStyle = UIModalPresentationCustom;
+
+    [self presentViewController:routeHistoryVC animated:YES completion:nil];
+    [routeHistoryVC setDelegate:self];
+}
+
 #pragma mark - GMSMapViewDelegate
 
 - (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position {
     _position = position;
 }
 
-- (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
-    [self.informationView setHidden:YES];
-    [self.mapView clear];
-    _destinationMarker = [GMSMarker markerWithPosition:coordinate];
-    _destinationMarker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
-    _destinationMarker.appearAnimation = kGMSMarkerAnimationPop;
-    _destinationMarker.map = self.mapView;
-    
-    _nameLocation = nil;
-    _destinationLocation = coordinate;
-    
-    GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithCoordinate:_originLocation
-                                                                       coordinate:_destinationLocation];
-    UIEdgeInsets mapInsets = UIEdgeInsetsMake(100.0, 100.0, 100.0, 100.0);
-    GMSCameraPosition *camera = [self.mapView cameraForBounds:bounds insets:mapInsets];
-    self.mapView.camera = camera;
+- (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate {
+    _polyline.map = nil;
+    [self choiceOfLocation:coordinate];
 }
 
 - (void)viewController:(GMSAutocompleteViewController *)viewController didAutocompleteWithPlace:(GMSPlace *)place {
@@ -188,155 +276,76 @@
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    GMSCameraPosition* camera = [GMSCameraPosition cameraWithTarget:manager.location.coordinate zoom:12.0];
-    self.mapView.camera = camera;
-    self.mapView.settings.myLocationButton = YES;
-    
-    self.originLocationTextField.text = @"мое местоположение";
+    if (_isFirstStartTheProgram) {
+        [self scalingLocation:manager.location.coordinate andZoom:12];
+        _isFirstStartTheProgram = NO;
+    }
+    [_myLocationButton setHidden:NO];
+    _originTextField.text = @"Мое местоположение";
     _isMyLocationEnabled = YES;
     _originLocation = manager.location.coordinate;
 }
 
-
-#pragma mark - UITextFieldDelegate
+#pragma mark - UItextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-//    [self.informationView setHidden:YES];
-//    _polyline.map = nil;
-//
-//    EGFetcherSampleViewController* fetcherSampleVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EGFetcherSampleViewController"];
-//
-//    fetcherSampleVC.preferredContentSize = CGSizeMake(400, 350);
-//    fetcherSampleVC.modalPresentationStyle = UIModalPresentationFormSheet;
-//    fetcherSampleVC.isMyLocationEnabled = _isMyLocationEnabled;
-//
-//    if (textField.tag == 0) {
-//        _originMarker.map = nil;
-//        fetcherSampleVC.isSelectedOriginLocation = YES;
-//    } else if (textField.tag == 1) {
-//        _destinationMarker.map = nil;
-//        fetcherSampleVC.isSelectedOriginLocation = NO;
-//    }
-//
-//    [self presentViewController:fetcherSampleVC animated:YES completion:nil];
-//    [fetcherSampleVC setDelegate:self];
-//
-//    UIPopoverPresentationController* popoverController = [fetcherSampleVC popoverPresentationController];
-//    [popoverController setPermittedArrowDirections:UIPopoverArrowDirectionAny];
-//
-//    _popover = popoverController;
+    [self.informationView setHidden:YES];
+    _polyline.map = nil;
     
-    return YES;
-}
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    NSLog(@"textField: %@", string);
-    [self.destinationTableView setHidden:NO];
-    [_samplesPlaces setRequest:textField.text];
-    _array = [_samplesPlaces getSamplesPlaces];
-
-    [self.destinationTableView reloadData];
-    return YES;
+    EGFetcherSampleViewController* fetcherSampleVC = [self.storyboard instantiateViewControllerWithIdentifier:@"EGFetcherSampleViewController"];
+    fetcherSampleVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    fetcherSampleVC.modalPresentationStyle = UIModalPresentationCustom;
+    fetcherSampleVC.isMyLocationEnabled = _isMyLocationEnabled;
+    fetcherSampleVC.myLocation = self.mapView.myLocation.coordinate;
+    switch (textField.tag) {
+        case EGOriginTextFieldType:
+            fetcherSampleVC.locationType = EGOriginLocationType;
+            break;
+        case EGDestinationTextFieldType:
+            fetcherSampleVC.locationType = EGDestinationLocationType;
+            break;
+    }
+    [self presentViewController:fetcherSampleVC animated:YES completion:nil];
+    [fetcherSampleVC setDelegate:self];
+    return NO;
 }
 
 #pragma mark - EGFetcherSampleViewControllerDelegate
 
-- (void)autocompleteWithPlace:(GMSPlace *)place
-  andIsSelectedOriginLocation:(BOOL)isSelectedOriginLocation {
-    if (place == nil) {
-        CLLocationCoordinate2D coordinate = self.mapView.myLocation.coordinate;
-        if (isSelectedOriginLocation) {
-            _originLocation = coordinate;
-            _originLocationTextField.text = @"мое местоположение";
-        } else {
-            _destinationLocation = coordinate;
-            _destinationLocationTextField.text = @"мое местоположение";
-        }
-        
-        if (_originLocation.latitude && _destinationLocation.latitude) {
-            GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithCoordinate:_originLocation
-                                                                               coordinate:_destinationLocation];
-            UIEdgeInsets mapInsets = UIEdgeInsetsMake(100.0, 100.0, 100.0, 100.0);
-            GMSCameraPosition *camera = [self.mapView cameraForBounds:bounds insets:mapInsets];
-            self.mapView.camera = camera;
-        } else {
-            GMSCameraPosition* camera = [GMSCameraPosition cameraWithTarget:place.coordinate zoom:15.0];
-            self.mapView.camera = camera;
-        }
-        
-        
+- (void)autocompleteWithMarker:(GMSMarker*)marker
+               andLocationType:(EGLocationType)locationType {
+    [self addMarker:marker andLocationType:locationType];
+}
+
+#pragma mark - EGRouteDataDelegate
+
+- (void) getRouteDataWithPolyline:(GMSPolyline *)polyline
+                         distance:(NSString *)distance
+                         duration:(NSString *)duration
+                     messageError:(NSString *)messageError {
+    if (!messageError) {
+        _distance = distance;
+        _duration = duration;
+        _polyline = polyline;
+        _polyline.map = self.mapView;
+        [self loadInformationViewAndScaling];
     } else {
-        [self addMarkerWithPlace:place
-     andIsSelectedOriginLocation:isSelectedOriginLocation];
+        [self showSimpleAlertWithMessege:messageError isOneButton:YES];
     }
 }
 
-- (void) addMarkerWithPlace:(GMSPlace *)place
-andIsSelectedOriginLocation:(BOOL)isSelectedOriginLocation {
-    GMSMarker *marker = [GMSMarker markerWithPosition:place.coordinate];
-    marker.title = place.name;
-    marker.snippet = [[place.formattedAddress componentsSeparatedByString:@", "] componentsJoinedByString:@"\n"];
-    marker.appearAnimation = kGMSMarkerAnimationPop;
+#pragma mark - EGRouteHistoryViewControllerDelegate
+
+- (void)loadingRouteFromHistoryWithOriginMarker:(GMSMarker*)originMarker destinationMarker:(GMSMarker*)destinationMarker {
+    [_mapView clear];
+//    _originMarker = originMarker;
+//    _originLocation = originMarker.position;
+//    _originMarker.map = self.mapView;
+    _destinationMarker = destinationMarker;
+    _destinationLocation = destinationMarker.position;
+    _destinationMarker.map = self.mapView;
     
-    if (isSelectedOriginLocation) {
-        self.originLocationTextField.text = place.name;
-        _originLocation = place.coordinate;
-        marker.icon = [GMSMarker markerImageWithColor:[UIColor blueColor]];
-        _originMarker = marker;
-        _originMarker.map = self.mapView;
-    } else {
-        _nameLocation = place.name;
-        self.destinationLocationTextField.text = place.name;
-        _destinationLocation = place.coordinate;
-        marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
-        _destinationMarker = marker;
-        _destinationMarker.map = self.mapView;
-    }
-
-    if (CLLocationCoordinate2DIsValid(_originLocation) && CLLocationCoordinate2DIsValid(_destinationLocation)) {
-        GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithCoordinate:_originLocation
-                                                                           coordinate:_destinationLocation];
-        UIEdgeInsets mapInsets = UIEdgeInsetsMake(100.0, 100.0, 100.0, 100.0);
-        GMSCameraPosition *camera = [self.mapView cameraForBounds:bounds insets:mapInsets];
-        self.mapView.camera = camera;
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self showSimpleAlertWithMessege:@"Построить маршрут?" isOneButton:YES];
-        });
-        
-    } else {
-        GMSCameraPosition* camera = [GMSCameraPosition cameraWithTarget:place.coordinate zoom:15.0];
-        self.mapView.camera = camera;
-    }
-}
-
-
-#pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_array count];
-}
-
-- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString* indentifier = @"Cell";
-    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:indentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifier];
-    }
-    GMSPlace* place = _array[indexPath.row];
-    NSLog(@"place - %@", place.name);
-    cell.textLabel.text = place.name;
-    return cell;
-}
-
-#pragma mark - UITableViewDelegate
-
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 30.f;
+    [self loadInformationViewAndScaling];
 }
 
 @end

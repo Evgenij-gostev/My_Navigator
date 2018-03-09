@@ -12,12 +12,16 @@
 
 @interface EGServerManager : NSObject
 
-+ (EGServerManager*) sharedManager;
++ (instancetype)new NS_UNAVAILABLE;
 
-- (void) getRouteWithOffset:(NSInteger) offset
-                     origin:(CLLocationCoordinate2D) origin
-                destination:(CLLocationCoordinate2D) destination
-                  onSuccess:(void(^)(NSArray* routeInformationsArray)) success
-                  onFailure:(void(^)(NSError* error, NSInteger state)) failure;
++ (EGServerManager*)sharedManager;
 
+- (void)getRouteWithOrigin:(CLLocationCoordinate2D)origin
+               destination:(CLLocationCoordinate2D)destination
+                 onSuccess:(void(^)(NSArray* routeInformationsArray))success
+                 onFailure:(void(^)(NSError* error, NSInteger state))failure;
+
+- (void)getAddressForCoordinate:(CLLocationCoordinate2D)coordinate
+                      onSuccess:(void(^)(NSString* address))success
+                      onFailure:(void(^)(NSError* error, NSInteger state))failure;
 @end

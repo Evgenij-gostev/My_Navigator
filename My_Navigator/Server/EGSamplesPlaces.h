@@ -10,6 +10,8 @@
 
 @interface EGSamplesPlaces : NSObject 
 
++ (instancetype)new NS_UNAVAILABLE;
+
 + (EGSamplesPlaces*)sharedSamplesPlaces;
 
 - (void)setRequest:(NSString*)request;

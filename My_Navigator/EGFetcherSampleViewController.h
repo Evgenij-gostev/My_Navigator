@@ -7,21 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <GoogleMaps/GoogleMaps.h>
 #import <GooglePlaces/GooglePlaces.h>
+
+typedef enum {
+    EGOriginLocationType,
+    EGDestinationLocationType
+} EGLocationType;
+
 
 @protocol EGFetcherSampleViewControllerDelegate <NSObject>
 
-- (void)autocompleteWithPlace:(GMSPlace *)place andIsSelectedOriginLocation:(BOOL)isSelectedOriginLocation;
+- (void)autocompleteWithMarker:(GMSMarker*)marker andLocationType:(EGLocationType)locationType;
 
 @end
 
     
-@interface EGFetcherSampleViewController : UITableViewController
+@interface EGFetcherSampleViewController : UIViewController
 
 @property (assign, nonatomic) BOOL isMyLocationEnabled;
-@property (assign, nonatomic) BOOL isSelectedOriginLocation;
-@property (weak, nonatomic) IBOutlet UISearchBar *textSearchBar;
 
+@property (assign, nonatomic) CLLocationCoordinate2D myLocation;
+@property (assign, nonatomic) EGLocationType locationType;
 @property (weak, nonatomic) id <EGFetcherSampleViewControllerDelegate> delegate;
 
 @end

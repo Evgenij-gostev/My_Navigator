@@ -24,19 +24,24 @@ PODS:
     - GooglePlaces (= 2.5.0)
   - GooglePlaces (2.5.0):
     - GoogleMaps/Base (= 2.5.0)
+  - Realm (3.1.0):
+    - Realm/Headers (= 3.1.0)
+  - Realm/Headers (3.1.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0)
   - GoogleMaps
   - GooglePlacePicker
   - GooglePlaces
+  - Realm
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
   GooglePlacePicker: 1573e644ab54564d95c2643edc0f29091609e966
   GooglePlaces: dd70d9d71ea1c7944846afe67de3712c99b30a77
+  Realm: 09513d7c054678d65cd02ce09871f805b0d758ac
 
-PODFILE CHECKSUM: d8e73df1a94a12eddab12bd9f34e02d15dd023a5
+PODFILE CHECKSUM: 7c85661431b3c12052840faaba8baf9b51aa6514
 
 COCOAPODS: 1.4.0

@@ -48,7 +48,7 @@
     _placesClient = [GMSPlacesClient sharedClient];
 }
 
-- (void) setRequest:(NSString*) request {
+- (void)setRequest:(NSString*) request {
     [_fetcher sourceTextHasChanged:request];
 }
 
@@ -62,11 +62,11 @@
     _arrayPlace = [NSMutableArray array];
     for (GMSAutocompletePrediction *prediction in predictions) {
         [_placesClient lookUpPlaceID:prediction.placeID callback:^(GMSPlace *place, NSError *error) {
-            if (error != nil) {
+            if (error) {
                 NSLog(@"Place Details error %@", [error localizedDescription]);
                 return;
             }
-            if (place != nil) {
+            if (place) {
                 [_arrayPlace addObject:place];
             } else {
                 NSLog(@"No place details for %@", prediction.placeID);

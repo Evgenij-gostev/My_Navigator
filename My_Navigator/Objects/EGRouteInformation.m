@@ -12,14 +12,14 @@
 
 @implementation EGRouteInformation
 
-- (id) initWithServerResponse:(NSDictionary*) responseObject {
+- (id)initWithServerResponse:(NSDictionary*) responseObject {
     self = [super init];
     if (self) {
         
-        self.distanceText = responseObject[@"distance"][@"text"];
-        self.durationText = responseObject[@"duration"][@"text"];
+        _distanceText = responseObject[@"distance"][@"text"];
+        _durationText = responseObject[@"duration"][@"text"];
 
-        self.path = [GMSMutablePath path];
+        _path = [GMSMutablePath path];
         NSArray* dictsArray = responseObject[@"steps"];
         for (NSDictionary* dict in dictsArray) {
             NSString* points = dict[@"polyline"][@"points"];

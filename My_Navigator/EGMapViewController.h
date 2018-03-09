@@ -7,32 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GoogleMaps/GoogleMaps.h>
-#import "EGFetcherSampleViewController.h"
-#import "EGDestinationTableView.h"
 
-@class CLLocationManager;
-@class GMSMapView;
 
-@interface EGMapViewController : UIViewController <GMSMapViewDelegate>
-@property (weak, nonatomic) IBOutlet UIView *testView;
-
-@property (weak, nonatomic) IBOutlet UIView *informationView;
-@property (weak, nonatomic) IBOutlet GMSMapView *mapView;
-@property (weak, nonatomic) IBOutlet EGDestinationTableView *destinationTableView;
-
-@property (weak, nonatomic) IBOutlet UITextField *originLocationTextField;
-@property (weak, nonatomic) IBOutlet UITextField *destinationLocationTextField;
-@property (weak, nonatomic) IBOutlet UILabel *nameRouteLabel;
-@property (weak, nonatomic) IBOutlet UILabel *distanceRouteLabel;
-@property (weak, nonatomic) IBOutlet UILabel *durationRouteLabel;
-
-@property (strong, nonatomic) CLLocationManager* locationManager;
-@property (strong, nonatomic) GMSPlace *place;
-
-- (IBAction)actionScaling:(UIButton *)sender;
-- (IBAction)actionAddRoute:(UIButton *)sender;
-- (IBAction)actionCancelRoute:(UIButton *)sender;
+@interface EGMapViewController : UIViewController
 
 
 @end

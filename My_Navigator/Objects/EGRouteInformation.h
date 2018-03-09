@@ -13,9 +13,12 @@
 
 @interface EGRouteInformation : NSObject
 
-@property (strong, nonatomic) NSString* durationText;
-@property (strong, nonatomic) NSString* distanceText;
-@property (strong, nonatomic) GMSMutablePath* path;
+@property (strong, nonatomic, readonly) NSString* durationText;
+@property (strong, nonatomic, readonly) NSString* distanceText;
+@property (strong, nonatomic, readonly) GMSMutablePath* path;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (id) initWithServerResponse:(NSDictionary*) responseObject;
 

@@ -21,9 +21,8 @@
 
 @implementation EGServerManager
 
-+ (EGServerManager*) sharedManager {
++ (EGServerManager*)sharedManager {
     static EGServerManager* manager = nil;
-    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[EGServerManager alloc] init];
@@ -31,20 +30,19 @@
     return manager;
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        NSURL* url = [NSURL URLWithString:@"https://maps.googleapis.com/maps/api/directions/"];
+        NSURL* url = [NSURL URLWithString:@"https://maps.googleapis.com/maps/api/"];
         self.sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:url];
     }
     return self;
 }
 
-- (void) getRouteWithOffset:(NSInteger) offset
-                       origin:(CLLocationCoordinate2D) origin
-                       destination:(CLLocationCoordinate2D) destination
-                    onSuccess:(void(^)(NSArray* routeInformationsArray)) success
-                    onFailure:(void(^)(NSError* error, NSInteger state)) failure {
+- (void)getRouteWithOrigin:(CLLocationCoordinate2D)origin
+               destination:(CLLocationCoordinate2D)destination
+                 onSuccess:(void(^)(NSArray* routeInformationsArray))success
+                 onFailure:(void(^)(NSError* error, NSInteger state))failure {
     
     NSString* originCoordinate = [NSString stringWithFormat:@"%f,%f", origin.latitude, origin.longitude];
     NSString* destinationCoordinate = [NSString stringWithFormat:@"%f,%f", destination.latitude, destination.longitude];
@@ -59,13 +57,10 @@
      @"AIzaSyDbPMpz5YN6DbntQcX6XN3mwSee-HeRHIQ",    @"key", nil];
     
     [self.sessionManager
-                 GET:@"json"
+                 GET:@"directions/json"
           parameters:params
-            progress:^(NSProgress * _Nonnull downloadProgress) {
-                NSLog(@"%@", downloadProgress);
-            }
+            progress:nil
              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                 
                  if (![[responseObject objectForKey:@"status"] isEqualToString:@"ZERO_RESULTS"]) {
                      NSArray* dictsArray = [responseObject[@"routes"] firstObject][@"legs"];
                      
@@ -82,12 +77,37 @@
                      success(nil);
                  }
              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                 NSLog(@"Error: %@", error);
                  if (failure) {
                      failure(error, task.state);
                  }
              }];
+}
+
+- (void)getAddressForCoordinate:(CLLocationCoordinate2D)coordinate
+                      onSuccess:(void(^)(NSString* address))success
+                      onFailure:(void(^)(NSError* error, NSInteger state))failure {
     
+    NSString* coordinateStr = [NSString stringWithFormat:@"%f,%f", coordinate.latitude, coordinate.longitude];
+    
+    NSDictionary* params =
+    [NSDictionary dictionaryWithObjectsAndKeys:
+     coordinateStr,                                 @"latlng",
+     @"AIzaSyAuzyI7se6hI1jNVS_V-RRZlVEW3AXZNsE",    @"key", nil];
+    
+    [self.sessionManager
+                 GET:@"geocode/json"
+                 parameters:params
+                 progress:nil
+                 success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                     NSString* address = [responseObject[@"results"] firstObject][@"formatted_address"];
+                         if (success) {
+                             success(address);
+                         }
+                 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                     if (failure) {
+                         failure(error, task.state);
+                     }
+                 }];
 }
 
 @end

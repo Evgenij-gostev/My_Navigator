@@ -6,4 +6,5 @@ target 'My_Navigator’ do
   pod 'GoogleMaps'
   pod 'GooglePlaces'
   pod 'GooglePlacePicker'
+  pod 'Realm'
 end
