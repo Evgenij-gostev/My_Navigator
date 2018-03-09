@@ -13,7 +13,8 @@
 
 @protocol EGRouteHistoryViewControllerDelegate <NSObject>
 
-- (void)loadingRouteFromHistoryWithOriginMarker:(GMSMarker*)originMarker destinationMarker:(GMSMarker*)destinationMarker;
+- (void)loadingRouteFromHistoryWithOriginMarker:(GMSMarker*)originMarker
+                              destinationMarker:(GMSMarker*)destinationMarker;
 
 @end
 

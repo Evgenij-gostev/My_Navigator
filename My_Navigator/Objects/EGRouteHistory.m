@@ -21,34 +21,30 @@
 #pragma mark - Origin Marker
 
 - (void)setOriginMarker:(GMSMarker*)marker {
-    _originLocationLatitude = marker.position.latitude;
-    _originLocationLongitude = marker.position.longitude;
-    _originSnippet = marker.snippet;
-//    _originIcon = marker.icon;
+    self.originLocationLatitude = marker.position.latitude;
+    self.originLocationLongitude = marker.position.longitude;
+    self.originSnippet = marker.snippet;
 }
 
 - (GMSMarker*)getOriginMarker {
     GMSMarker *marker =
-            [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(self.originLocationLatitude, self.originLocationLongitude)];
+    [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(self.originLocationLatitude, self.originLocationLongitude)];
     marker.snippet = self.originSnippet;
-//    marker.icon = _originIcon;
     return marker;
 }
 
 #pragma mark - Destination Marker
 
 - (void)setDestinationMarker:(GMSMarker*)marker {
-    _destinationLocationLatitude = marker.position.latitude;
-    _destinationLocationLongitude = marker.position.longitude;
-    _destinationSnippet = marker.snippet;
-//    _destinationIcon = marker.icon;
+    self.destinationLocationLatitude = marker.position.latitude;
+    self.destinationLocationLongitude = marker.position.longitude;
+    self.destinationSnippet = marker.snippet;
 }
 
 - (GMSMarker*)getDestinationMarker {
     GMSMarker *marker =
     [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(self.destinationLocationLatitude, self.destinationLocationLongitude)];
     marker.snippet = self.destinationSnippet;
-//    marker.icon = _destinationIcon;
     return marker;
 }
 

@@ -19,29 +19,18 @@
 @property (assign, nonatomic) double originLocationLatitude;
 @property (assign, nonatomic) double originLocationLongitude;
 @property (strong, nonatomic) NSString* originSnippet;
-//@property (weak, nonatomic) UIImage* originIcon;
 // Destination Marker
 @property (assign, nonatomic) double destinationLocationLatitude;
 @property (assign, nonatomic) double destinationLocationLongitude;
 @property (strong, nonatomic) NSString* destinationSnippet;
-//@property (weak, nonatomic) UIImage* destinationIcon;
-//Polyline
-//@property (assign, nonatomic) CGFloat strokeWidth;
-//@property (weak, nonatomic) UIColor* strokeColor;
-
-
-//GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
-//polyline.strokeColor = [UIColor greenColor];
-//polyline.strokeWidth = 5.f;
-
-//@property (strong, nonatomic) GMSPolyline* polyline;
-
 
 
 - (void)setOriginMarker:(GMSMarker*)marker;
-- (GMSMarker*)getOriginMarker;
-- (void)setDestinationMarker:(GMSMarker*)marker;
-- (GMSMarker*)getDestinationMarker;
 
+- (GMSMarker*)getOriginMarker;
+
+- (void)setDestinationMarker:(GMSMarker*)marker;
+
+- (GMSMarker*)getDestinationMarker;
 
 @end

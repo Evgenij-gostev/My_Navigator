@@ -27,13 +27,6 @@
     
     RLMResults<EGRouteHistory* >* routeHistory = [EGRouteHistory allObjects];
    _arrayRouteHistory = [routeHistory valueForKey:@"self"];
-//    NSLog(@"realm count: %@", peopleObjects);
-//
-//    for (EGRouteHistory* str in _arrayRouteHistory) {
-//        NSLog(@"str name - %@", str.name);
-//        NSLog(@"str - %f", [str getDestinationLocationCoordinate].latitude);
-//
-//    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -73,17 +66,9 @@
 #pragma mark - Private metods
 
 - (void)loadRouteHistory:(EGRouteHistory*) routeHistory {
-//    CLLocationCoordinate2D originLocationCoordinate = [routeHistory getOriginLocationCoordinate];
-//    CLLocationCoordinate2D destinationLocationCoordinate = [routeHistory getDestinationLocationCoordinate];
-
-    GMSMarker *originMarker = [routeHistory getOriginMarker];
-    GMSMarker *destinationMarker = [routeHistory getDestinationMarker];
-
-    NSLog(@"originLocationCoordinate: %f - %f", originMarker.position.latitude, originMarker.position.longitude);
-    NSLog(@"destinationLocationCoordinate: %f - %f", destinationMarker.position.latitude, destinationMarker.position.longitude);
-
+    GMSMarker* originMarker = [routeHistory getOriginMarker];
+    GMSMarker* destinationMarker = [routeHistory getDestinationMarker];
     [self.delegate loadingRouteFromHistoryWithOriginMarker:originMarker destinationMarker:destinationMarker];
 }
-
 
 @end

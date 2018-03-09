@@ -188,6 +188,7 @@ typedef enum {
                                     style:UIAlertActionStyleDefault
                                     handler:^(UIAlertAction * _Nonnull action) {
                                         [self buildRoute];
+                                        [self saveRoute];
                                     }];
         [alert addAction:yesButton];
     }
@@ -200,25 +201,13 @@ typedef enum {
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-
-
 - (void)saveRoute {
-    NSLog(@"save route");
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
-    
     EGRouteHistory* routeHistory = [[EGRouteHistory alloc] init];
-//    [routeHistory setOriginLocationCoordinate:_originLocation];
-//    [routeHistory setDestinationLocationCoordinate:_destinationLocation];
-
+    routeHistory.name = _addressLocation;
     [routeHistory setOriginMarker:_originMarker];
     [routeHistory setDestinationMarker:_destinationMarker];
-    
-    //    routeHistory.originMarker = _originMarker;
-    //    routeHistory.destinationMarker = _destinationMarker;
-    //    routeHistory.polyline = _polyline;
-    routeHistory.name = _addressLocation;
-    
     [realm addObject:routeHistory];
     [realm commitWriteTransaction];
 }
@@ -284,6 +273,8 @@ typedef enum {
     _originTextField.text = @"Мое местоположение";
     _isMyLocationEnabled = YES;
     _originLocation = manager.location.coordinate;
+    _originMarker = [GMSMarker markerWithPosition:manager.location.coordinate];
+    _originMarker.snippet = @"Мое местоположение";
 }
 
 #pragma mark - UItextFieldDelegate
@@ -336,16 +327,22 @@ typedef enum {
 
 #pragma mark - EGRouteHistoryViewControllerDelegate
 
-- (void)loadingRouteFromHistoryWithOriginMarker:(GMSMarker*)originMarker destinationMarker:(GMSMarker*)destinationMarker {
+- (void)loadingRouteFromHistoryWithOriginMarker:(GMSMarker*)originMarker
+                              destinationMarker:(GMSMarker*)destinationMarker {
     [_mapView clear];
-//    _originMarker = originMarker;
-//    _originLocation = originMarker.position;
-//    _originMarker.map = self.mapView;
-    _destinationMarker = destinationMarker;
+//  originMarker;
+    _originTextField.text = originMarker.snippet;
+    _originLocation = originMarker.position;
+    _originMarker = originMarker;
+    _originMarker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
+    _originMarker.map = self.mapView;
+//  destinationMarker;
+    _destinationTextField.text = destinationMarker.snippet;
     _destinationLocation = destinationMarker.position;
+    _destinationMarker = destinationMarker;
+    _originMarker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
     _destinationMarker.map = self.mapView;
-    
-    [self loadInformationViewAndScaling];
+    [self buildRoute];
 }
 
 @end
