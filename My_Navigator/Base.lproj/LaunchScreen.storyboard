@@ -25,7 +25,7 @@
                                 <color key="textColor" red="0.18297280148786016" green="0.34119980569948183" blue="0.1541118400340431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image=" nav.png" translatesAutoresizingMaskIntoConstraints="NO" id="m9K-rY-mLh">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image=" nav" translatesAutoresizingMaskIntoConstraints="NO" id="m9K-rY-mLh">
                                 <rect key="frame" x="152" y="298" width="70" height="70"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
@@ -40,6 +40,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name=" nav.png" width="160" height="160"/>
+        <image name=" nav" width="160" height="160"/>
     </resources>
 </document>

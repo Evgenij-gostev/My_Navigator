@@ -7,6 +7,8 @@
 //
 
 #import "EGFetcherSampleViewController.h"
+#import <GooglePlaces/GooglePlaces.h>
+#import "CLLocation+EGCheckCLLocationCoordinate2D.h"
 #import "EGSamplesPlaces.h"
 #import "EGMarkers.h"
 
@@ -27,7 +29,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     _samplesPlaces = [EGSamplesPlaces sharedSamplesPlaces];
     _arrayPlace = [NSArray array];
     [_searchTextField becomeFirstResponder];
@@ -36,7 +37,6 @@
     } else if (_locationType == EGDestinationLocationType) {
         _searchTextFieldConstraintTop.constant = 65;
     }
-    
 }
 
 #pragma mark - UItextFieldDelegate
@@ -45,7 +45,6 @@
     NSString* newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     [_samplesPlaces setRequest:newString];
     _arrayPlace = [_samplesPlaces getSamplesPlaces];
-    //    _arrayPlace = @[@"Москва", @"Подольск", @"Домодедово", @"Пенза", @"Видное", @"Молоково"];
     [_tableView reloadData];
     return YES;
 }
@@ -66,15 +65,13 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:indentifier];
     }
-
-    if (self.myLocation.latitude != 0 && !indexPath.section) {
+    if ([CLLocation EGCLLocationNoNullCoordinate:self.myLocation] && !indexPath.section) {
         cell.textLabel.text = @"Мое местоположение";
         cell.imageView.image = [UIImage imageNamed:@"My Location.png"];
     } else {
         GMSPlace* place = _arrayPlace[indexPath.row];
         cell.textLabel.text = place.name;
         cell.detailTextLabel.text = place.formattedAddress;
-//        cell.textLabel.text = _arrayPlace[indexPath.row];
         cell.imageView.image = [UIImage imageNamed:@"location.png"];
     }
     return cell;
@@ -85,12 +82,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     GMSPlace* place;
-    if (self.myLocation.latitude != 0 && !indexPath.section) {
+    if ([CLLocation EGCLLocationNoNullCoordinate:self.myLocation] && !indexPath.section) {
         place = nil;
     } else {
         place = _arrayPlace[indexPath.row];
     }
-    [self createMarkerFromPlace:place];
+    [self _createMarkerFromPlace:place];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -106,7 +103,7 @@
 
 #pragma mark - Private Metods
 
-- (void)createMarkerFromPlace:(GMSPlace *)place {
+- (void)_createMarkerFromPlace:(GMSPlace *)place {
     EGMarkers* markers = [[EGMarkers alloc] initWithPlace:place
                                             andMyLocation:self.myLocation];
     GMSMarker* marker = [markers marker];

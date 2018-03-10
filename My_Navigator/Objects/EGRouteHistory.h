@@ -6,15 +6,16 @@
 //  Copyright © 2018 Евгений Гостев. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+
 #import "Realm.h"
-#import <GoogleMaps/GoogleMaps.h>
+
+@class GMSMarker;
+
 
 @interface EGRouteHistory : RLMObject
 
 @property (strong, nonatomic) NSString* name;
 @property (strong, nonatomic) NSDate* date;
-
 // Origin Marker
 @property (assign, nonatomic) double originLocationLatitude;
 @property (assign, nonatomic) double originLocationLongitude;

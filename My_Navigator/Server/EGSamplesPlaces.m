@@ -31,14 +31,14 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [self loadComponents];
+        [self _loadComponents];
     }
     return self;
 }
 
 #pragma mark - Methods
 
-- (void)loadComponents {
+- (void)_loadComponents {
     GMSAutocompleteFilter *filter = [[GMSAutocompleteFilter alloc] init];
     filter.type = kGMSPlacesAutocompleteTypeFilterNoFilter;
     // Create the fetcher.

@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GoogleMaps/GoogleMaps.h>
-#import <GooglePlaces/GooglePlaces.h>
+#import <CoreLocation/CoreLocation.h>
+
+@class GMSMarker;
+
 
 typedef enum {
     EGOriginLocationType,
@@ -26,7 +28,6 @@ typedef enum {
 @interface EGFetcherSampleViewController : UIViewController
 
 @property (assign, nonatomic) BOOL isMyLocationEnabled;
-
 @property (assign, nonatomic) CLLocationCoordinate2D myLocation;
 @property (assign, nonatomic) EGLocationType locationType;
 @property (weak, nonatomic) id <EGFetcherSampleViewControllerDelegate> delegate;

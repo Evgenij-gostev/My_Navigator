@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GoogleMaps/GoogleMaps.h>
-#import <GooglePlaces/GooglePlaces.h>
+#import <CoreLocation/CoreLocation.h>
+
+@class GMSPlace;
+@class GMSMarker;
 
 
 @interface EGMarkers : NSObject

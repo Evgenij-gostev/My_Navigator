@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GoogleMaps/GoogleMaps.h>
+#import <CoreLocation/CoreLocation.h>
+
+@class GMSPolyline;
 
 
 @protocol EGRouteDataDelegate <NSObject>

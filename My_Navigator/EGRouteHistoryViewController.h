@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GoogleMaps/GoogleMaps.h>
 
+@class GMSMarker;
 
 
 @protocol EGRouteHistoryViewControllerDelegate <NSObject>

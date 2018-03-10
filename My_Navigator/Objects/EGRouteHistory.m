@@ -7,6 +7,8 @@
 //
 
 #import "EGRouteHistory.h"
+#import "Realm.h"
+#import <GoogleMaps/GoogleMaps.h>
 
 @implementation EGRouteHistory
 

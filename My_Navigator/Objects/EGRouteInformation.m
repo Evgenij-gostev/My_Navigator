@@ -15,7 +15,6 @@
 - (id)initWithServerResponse:(NSDictionary*) responseObject {
     self = [super init];
     if (self) {
-        
         _distanceText = responseObject[@"distance"][@"text"];
         _durationText = responseObject[@"duration"][@"text"];
 
@@ -24,7 +23,6 @@
         for (NSDictionary* dict in dictsArray) {
             NSString* points = dict[@"polyline"][@"points"];
             GMSPath *polyLinePath = [GMSPath pathFromEncodedPath:points];
-
             for (int i = 0; i < polyLinePath.count; i++) {
                 [self.path addCoordinate:[polyLinePath coordinateAtIndex:i]];
             }

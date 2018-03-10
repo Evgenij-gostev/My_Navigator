@@ -48,13 +48,13 @@
     NSString* destinationCoordinate = [NSString stringWithFormat:@"%f,%f", destination.latitude, destination.longitude];
     
     NSDictionary* params =
-    [NSDictionary dictionaryWithObjectsAndKeys:
-     originCoordinate,                              @"origin",
-     destinationCoordinate,                         @"destination",
-     @"driving",                                    @"mode",
-     @"now",                                        @"departure_time",
-     @"pessimistic",                                @"traffic_model",
-     @"AIzaSyDbPMpz5YN6DbntQcX6XN3mwSee-HeRHIQ",    @"key", nil];
+        [NSDictionary dictionaryWithObjectsAndKeys:
+         originCoordinate,                              @"origin",
+         destinationCoordinate,                         @"destination",
+         @"driving",                                    @"mode",
+         @"now",                                        @"departure_time",
+         @"pessimistic",                                @"traffic_model",
+         @"AIzaSyDbPMpz5YN6DbntQcX6XN3mwSee-HeRHIQ",    @"key", nil];
     
     [self.sessionManager
                  GET:@"directions/json"
@@ -69,7 +69,6 @@
                          EGRouteInformation* routeInformation = [[EGRouteInformation alloc] initWithServerResponse:dict];
                          [objectsArray addObject:routeInformation];
                      }
-                     
                      if (success) {
                          success(objectsArray);
                      }
@@ -90,9 +89,9 @@
     NSString* coordinateStr = [NSString stringWithFormat:@"%f,%f", coordinate.latitude, coordinate.longitude];
     
     NSDictionary* params =
-    [NSDictionary dictionaryWithObjectsAndKeys:
-     coordinateStr,                                 @"latlng",
-     @"AIzaSyAuzyI7se6hI1jNVS_V-RRZlVEW3AXZNsE",    @"key", nil];
+        [NSDictionary dictionaryWithObjectsAndKeys:
+         coordinateStr,                                 @"latlng",
+         @"AIzaSyAuzyI7se6hI1jNVS_V-RRZlVEW3AXZNsE",    @"key", nil];
     
     [self.sessionManager
                  GET:@"geocode/json"

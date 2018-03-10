@@ -11,27 +11,18 @@
 		8C02AC752034FC1F006B8680 /* EGFetcherSampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C02AC742034FC1F006B8680 /* EGFetcherSampleViewController.m */; };
 		8C14C4DD205185D800E5EADA /* EGMarkers.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C14C4DC205185D800E5EADA /* EGMarkers.m */; };
 		8C14C4E72051BFE400E5EADA /* EGRouteData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C14C4E62051BFE400E5EADA /* EGRouteData.m */; };
-		8C1CD74020251E3500701E9F /* minus.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8C1CD73E20251E3500701E9F /* minus.jpg */; };
-		8C1CD74120251E3500701E9F /* plus.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8C1CD73F20251E3500701E9F /* plus.jpg */; };
 		8C1CD7452025255100701E9F /* EGMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1CD7442025255100701E9F /* EGMapViewController.m */; };
 		8C2D20DE204C68AB001A3F54 /* EGRouteHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2D20DD204C68AB001A3F54 /* EGRouteHistoryViewController.m */; };
-		8C2D20E0204C6C2D001A3F54 /* historical.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2D20DF204C6C2D001A3F54 /* historical.png */; };
-		8C2E55372039A8D700CC424D /* My Location.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2E55362039A8D700CC424D /* My Location.png */; };
-		8C2E55392039AD1C00CC424D /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2E55382039AD1C00CC424D /* location.png */; };
-		8C2EAFB1202F784B003F0AC3 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2EAFAE202F784A003F0AC3 /* search.png */; };
-		8C2EAFB2202F784B003F0AC3 /* minus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2EAFAF202F784B003F0AC3 /* minus.png */; };
-		8C2EAFB3202F784B003F0AC3 /* plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C2EAFB0202F784B003F0AC3 /* plus.png */; };
 		8C346F922041F4110017EC68 /* EGSamplesPlaces.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C346F912041F4110017EC68 /* EGSamplesPlaces.m */; };
+		8C3689132053F890000F8C8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1572D201DE5A5003B76B3 /* Assets.xcassets */; };
 		8C3989C020210F5600EB4573 /* EGServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3989BF20210F5600EB4573 /* EGServerManager.m */; };
 		8C3989C7202118B800EB4573 /* EGRouteInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3989C6202118B800EB4573 /* EGRouteInformation.m */; };
+		8C7C972620546B0F003C7F64 /* CLLocation+EGCheckCLLocationCoordinate2D.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C7C972520546B0F003C7F64 /* CLLocation+EGCheckCLLocationCoordinate2D.m */; };
 		8CD8BD7A204B25D800B50E7A /* EGRouteHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CD8BD79204B25D800B50E7A /* EGRouteHistory.m */; };
 		8CF15726201DE5A5003B76B3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF15725201DE5A5003B76B3 /* AppDelegate.m */; };
 		8CF1572C201DE5A5003B76B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1572A201DE5A5003B76B3 /* Main.storyboard */; };
-		8CF1572E201DE5A5003B76B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1572D201DE5A5003B76B3 /* Assets.xcassets */; };
 		8CF15731201DE5A5003B76B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1572F201DE5A5003B76B3 /* LaunchScreen.storyboard */; };
 		8CF15734201DE5A5003B76B3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF15733201DE5A5003B76B3 /* main.m */; };
-		8CFE67C6202BAE0500920178 /*  nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 8CFE67C5202BAE0500920178 /*  nav.png */; };
-		8CFE67C8202BAFC200920178 /* search.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CFE67C7202BAFC200920178 /* search.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,24 +32,18 @@
 		8C14C4DC205185D800E5EADA /* EGMarkers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGMarkers.m; sourceTree = "<group>"; };
 		8C14C4E52051BFE400E5EADA /* EGRouteData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGRouteData.h; sourceTree = "<group>"; };
 		8C14C4E62051BFE400E5EADA /* EGRouteData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGRouteData.m; sourceTree = "<group>"; };
-		8C1CD73E20251E3500701E9F /* minus.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = minus.jpg; sourceTree = "<group>"; };
-		8C1CD73F20251E3500701E9F /* plus.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = plus.jpg; sourceTree = "<group>"; };
 		8C1CD7432025255100701E9F /* EGMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGMapViewController.h; sourceTree = "<group>"; };
 		8C1CD7442025255100701E9F /* EGMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGMapViewController.m; sourceTree = "<group>"; };
 		8C2D20DC204C68AB001A3F54 /* EGRouteHistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGRouteHistoryViewController.h; sourceTree = "<group>"; };
 		8C2D20DD204C68AB001A3F54 /* EGRouteHistoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGRouteHistoryViewController.m; sourceTree = "<group>"; };
-		8C2D20DF204C6C2D001A3F54 /* historical.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = historical.png; sourceTree = "<group>"; };
-		8C2E55362039A8D700CC424D /* My Location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "My Location.png"; sourceTree = "<group>"; };
-		8C2E55382039AD1C00CC424D /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location.png; sourceTree = "<group>"; };
-		8C2EAFAE202F784A003F0AC3 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
-		8C2EAFAF202F784B003F0AC3 /* minus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = minus.png; sourceTree = "<group>"; };
-		8C2EAFB0202F784B003F0AC3 /* plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plus.png; sourceTree = "<group>"; };
 		8C346F902041F4110017EC68 /* EGSamplesPlaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGSamplesPlaces.h; sourceTree = "<group>"; };
 		8C346F912041F4110017EC68 /* EGSamplesPlaces.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGSamplesPlaces.m; sourceTree = "<group>"; };
 		8C3989BE20210F5600EB4573 /* EGServerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGServerManager.h; sourceTree = "<group>"; };
 		8C3989BF20210F5600EB4573 /* EGServerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGServerManager.m; sourceTree = "<group>"; };
 		8C3989C5202118B800EB4573 /* EGRouteInformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGRouteInformation.h; sourceTree = "<group>"; };
 		8C3989C6202118B800EB4573 /* EGRouteInformation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGRouteInformation.m; sourceTree = "<group>"; };
+		8C7C972420546B0F003C7F64 /* CLLocation+EGCheckCLLocationCoordinate2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocation+EGCheckCLLocationCoordinate2D.h"; sourceTree = "<group>"; };
+		8C7C972520546B0F003C7F64 /* CLLocation+EGCheckCLLocationCoordinate2D.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocation+EGCheckCLLocationCoordinate2D.m"; sourceTree = "<group>"; };
 		8CD8BD78204B25D800B50E7A /* EGRouteHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EGRouteHistory.h; sourceTree = "<group>"; };
 		8CD8BD79204B25D800B50E7A /* EGRouteHistory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EGRouteHistory.m; sourceTree = "<group>"; };
 		8CF15721201DE5A5003B76B3 /* My_Navigator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = My_Navigator.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,8 +54,6 @@
 		8CF15730201DE5A5003B76B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8CF15732201DE5A5003B76B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8CF15733201DE5A5003B76B3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		8CFE67C5202BAE0500920178 /*  nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = " nav.png"; sourceTree = "<group>"; };
-		8CFE67C7202BAFC200920178 /* search.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = search.jpg; sourceTree = "<group>"; };
 		C2BC2D5D382029D0D7A04A37 /* libPods-My_Navigator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-My_Navigator.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD7F465DCDA877AA916F7D7 /* Pods-My_Navigator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My_Navigator.debug.xcconfig"; path = "Pods/Target Support Files/Pods-My_Navigator/Pods-My_Navigator.debug.xcconfig"; sourceTree = "<group>"; };
 		E1C632F47816149505486DBE /* Pods-My_Navigator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My_Navigator.release.xcconfig"; path = "Pods/Target Support Files/Pods-My_Navigator/Pods-My_Navigator.release.xcconfig"; sourceTree = "<group>"; };
@@ -94,23 +77,6 @@
 				C2BC2D5D382029D0D7A04A37 /* libPods-My_Navigator.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		8C1CD73D20251E3500701E9F /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				8C1CD73E20251E3500701E9F /* minus.jpg */,
-				8C2E55362039A8D700CC424D /* My Location.png */,
-				8C2E55382039AD1C00CC424D /* location.png */,
-				8CFE67C7202BAFC200920178 /* search.jpg */,
-				8C2D20DF204C6C2D001A3F54 /* historical.png */,
-				8C2EAFAF202F784B003F0AC3 /* minus.png */,
-				8C2EAFB0202F784B003F0AC3 /* plus.png */,
-				8C2EAFAE202F784A003F0AC3 /* search.png */,
-				8CFE67C5202BAE0500920178 /*  nav.png */,
-				8C1CD73F20251E3500701E9F /* plus.jpg */,
-			);
-			path = Images;
 			sourceTree = "<group>";
 		};
 		8C1CD7422025252800701E9F /* ViewControllers */ = {
@@ -137,6 +103,8 @@
 				8C14C4E62051BFE400E5EADA /* EGRouteData.m */,
 				8CD8BD78204B25D800B50E7A /* EGRouteHistory.h */,
 				8CD8BD79204B25D800B50E7A /* EGRouteHistory.m */,
+				8C7C972420546B0F003C7F64 /* CLLocation+EGCheckCLLocationCoordinate2D.h */,
+				8C7C972520546B0F003C7F64 /* CLLocation+EGCheckCLLocationCoordinate2D.m */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -164,7 +132,6 @@
 			children = (
 				8C1CD7422025252800701E9F /* ViewControllers */,
 				8C3989C42021189500EB4573 /* Objects */,
-				8C1CD73D20251E3500701E9F /* Images */,
 				8CF1573A201DF4FC003B76B3 /* Server */,
 				8CF15724201DE5A5003B76B3 /* AppDelegate.h */,
 				8CF15725201DE5A5003B76B3 /* AppDelegate.m */,
@@ -233,6 +200,11 @@
 					8CF15720201DE5A5003B76B3 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -259,19 +231,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8CFE67C6202BAE0500920178 /*  nav.png in Resources */,
-				8C2EAFB3202F784B003F0AC3 /* plus.png in Resources */,
-				8C1CD74020251E3500701E9F /* minus.jpg in Resources */,
-				8C2EAFB2202F784B003F0AC3 /* minus.png in Resources */,
-				8C2E55392039AD1C00CC424D /* location.png in Resources */,
-				8C1CD74120251E3500701E9F /* plus.jpg in Resources */,
-				8C2EAFB1202F784B003F0AC3 /* search.png in Resources */,
-				8CFE67C8202BAFC200920178 /* search.jpg in Resources */,
-				8C2E55372039A8D700CC424D /* My Location.png in Resources */,
 				8CF15731201DE5A5003B76B3 /* LaunchScreen.storyboard in Resources */,
-				8CF1572E201DE5A5003B76B3 /* Assets.xcassets in Resources */,
+				8C3689132053F890000F8C8E /* Assets.xcassets in Resources */,
 				8CF1572C201DE5A5003B76B3 /* Main.storyboard in Resources */,
-				8C2D20E0204C6C2D001A3F54 /* historical.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +305,7 @@
 				8CD8BD7A204B25D800B50E7A /* EGRouteHistory.m in Sources */,
 				8C02AC752034FC1F006B8680 /* EGFetcherSampleViewController.m in Sources */,
 				8C2D20DE204C68AB001A3F54 /* EGRouteHistoryViewController.m in Sources */,
+				8C7C972620546B0F003C7F64 /* CLLocation+EGCheckCLLocationCoordinate2D.m in Sources */,
 				8C1CD7452025255100701E9F /* EGMapViewController.m in Sources */,
 				8C3989C7202118B800EB4573 /* EGRouteInformation.m in Sources */,
 				8C14C4E72051BFE400E5EADA /* EGRouteData.m in Sources */,

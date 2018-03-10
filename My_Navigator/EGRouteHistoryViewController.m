@@ -10,9 +10,6 @@
 #import "EGRouteHistory.h"
 #import "Realm.h"
 
-@interface EGRouteHistoryViewController ()
-
-@end
 
 @implementation EGRouteHistoryViewController {
     NSArray * _arrayRouteHistory;
@@ -21,7 +18,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     _dateFormatter = [[NSDateFormatter alloc] init];
     [_dateFormatter setDateFormat:@"yyyy.MM.dd HH:mm:ss"];
     
@@ -31,20 +27,32 @@
 
 #pragma mark - UITableViewDataSource
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_arrayRouteHistory count];
+    return section == 1 && [_arrayRouteHistory count] != 0 ? 1 : [_arrayRouteHistory count];
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString* indentifier = @"Cell";
+    static NSString* indentifierDelete = @"CellDelete";
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:indentifier];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:indentifier];
     }
-    EGRouteHistory* routeHistory = _arrayRouteHistory[indexPath.row];
-    cell.textLabel.text = routeHistory.name;
-    cell.detailTextLabel.text = [_dateFormatter stringFromDate:routeHistory.date];
-
+    if (indexPath.section == 0) {
+        EGRouteHistory* routeHistory = _arrayRouteHistory[indexPath.row];
+        cell.textLabel.text = routeHistory.name;
+        cell.detailTextLabel.text = [_dateFormatter stringFromDate:routeHistory.date];
+    } else if (indexPath.section == 1) {
+        UITableViewCell* cellDelete =
+            [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifierDelete];
+        cellDelete.textLabel.text = @"Очистить историю";
+        cellDelete.textLabel.textColor = [UIColor redColor];
+        return cellDelete;
+    }
     return cell;
 }
 
@@ -52,8 +60,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    EGRouteHistory* routeHistory = _arrayRouteHistory[indexPath.row];
-    [self loadRouteHistory:routeHistory];
+    if (indexPath.section == 0) {
+        EGRouteHistory* routeHistory = _arrayRouteHistory[indexPath.row];
+        [self _loadRouteHistory:routeHistory];
+    } else if (indexPath.section == 1) {
+        RLMRealm *realm = [RLMRealm defaultRealm];
+        [realm beginWriteTransaction];
+        [realm deleteAllObjects];
+        [realm commitWriteTransaction];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -65,7 +80,7 @@
 
 #pragma mark - Private metods
 
-- (void)loadRouteHistory:(EGRouteHistory*) routeHistory {
+- (void)_loadRouteHistory:(EGRouteHistory*) routeHistory {
     GMSMarker* originMarker = [routeHistory getOriginMarker];
     GMSMarker* destinationMarker = [routeHistory getDestinationMarker];
     [self.delegate loadingRouteFromHistoryWithOriginMarker:originMarker destinationMarker:destinationMarker];
